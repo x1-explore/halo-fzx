@@ -96,7 +96,7 @@
   --grad-primary: linear-gradient(135deg, #6366f1 0%, #7c3aed 50%, #ec4899 100%);
   --grad-card: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(236, 72, 153, 0.06) 100%);
 
-  --glass-bg: rgba(255, 255, 255, 0.9);
+  --glass-bg: rgba(255, 255, 255, 0.85);
   --glass-border: rgba(99, 102, 241, 0.16);
   --glass-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
 

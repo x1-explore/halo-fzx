@@ -14,7 +14,8 @@
         const storageKey = 'fzx-color-scheme';
         const saved = localStorage.getItem(storageKey);
         const setting = /*[[${theme.config.appearance.color_scheme}]]*/ 'dark';
-        const normalized = (!setting || setting === 'null') ? 'dark' : setting;
+        // Halo/Thymeleaf may serialize null as literal "null", normalize both cases
+        const normalized = (!setting || setting === 'null' || setting === null) ? 'dark' : setting;
         const systemPrefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
         const fallback = normalized === 'system' ? (systemPrefersLight ? 'light' : 'dark') : normalized;
         const mode = saved === 'light' || saved === 'dark' ? saved : fallback;
