@@ -1,11 +1,12 @@
 <footer class="fzx-footer" th:fragment="footer" xmlns:th="https://www.thymeleaf.org"
         th:with="brandingTitle = ${!#strings.isEmpty(theme.config.branding.site_title) ? theme.config.branding.site_title : site.title},
                  brandingSubtitle = ${!#strings.isEmpty(theme.config.branding.site_subtitle) ? theme.config.branding.site_subtitle : site.subtitle},
-                 footerBadge = ${theme.config.footer != null ? theme.config.footer.footer_badge : null},
-                 footerNavLinks = ${theme.config.footer != null ? theme.config.footer.footer_nav_links : null},
-                 footerMoreLinks = ${theme.config.footer != null ? theme.config.footer.footer_more_links : null},
-                 footerNavTitle = ${!#strings.isEmpty(theme.config.footer != null ? theme.config.footer.footer_nav_title : null) ? theme.config.footer.footer_nav_title : '导航'},
-                 footerMoreTitle = ${!#strings.isEmpty(theme.config.footer != null ? theme.config.footer.footer_more_title : null) ? theme.config.footer.footer_more_title : '更多'}">
+                 footerCfg = ${theme.config.footer},
+                 footerBadge = ${footerCfg != null ? footerCfg.footer_badge : null},
+                 footerNavLinks = ${footerCfg != null ? footerCfg.footer_nav_links : null},
+                 footerMoreLinks = ${footerCfg != null ? footerCfg.footer_more_links : null},
+                 footerNavTitle = ${!#strings.isEmpty(footerCfg != null ? footerCfg.footer_nav_title : null) ? footerCfg.footer_nav_title : '导航'},
+                 footerMoreTitle = ${!#strings.isEmpty(footerCfg != null ? footerCfg.footer_more_title : null) ? footerCfg.footer_more_title : '更多'}">
   <div class="fzx-container">
     <div class="fzx-footer-grid">
 
@@ -26,7 +27,9 @@
         <ul class="fzx-footer-links">
           <th:block th:if="${!#lists.isEmpty(footerNavLinks)}">
             <li th:each="item : ${footerNavLinks}"
-                th:with="safeUrl = ${#strings.startsWith(#strings.toLowerCase(item.url != null ? item.url : ''), 'javascript:') ? '/' : (item.url != null ? item.url : '/')}">
+                th:with="rawUrl = ${item.url != null ? item.url : '/'},
+                         lower = ${#strings.toLowerCase(rawUrl)},
+                         safeUrl = ${lower.startsWith('http://') or lower.startsWith('https://') or lower.startsWith('/') or lower.startsWith('mailto:') ? rawUrl : '/'}">
               <a class="fzx-footer-link"
                  th:href="${safeUrl}"
                  th:attr="rel=${safeUrl != null and #strings.startsWith(#strings.toLowerCase(safeUrl), 'http') ? 'noopener' : null}">
@@ -50,7 +53,9 @@
         <ul class="fzx-footer-links">
           <th:block th:if="${!#lists.isEmpty(footerMoreLinks)}">
             <li th:each="item : ${footerMoreLinks}"
-                th:with="safeUrl = ${#strings.startsWith(#strings.toLowerCase(item.url != null ? item.url : ''), 'javascript:') ? '/' : (item.url != null ? item.url : '/')}">
+                th:with="rawUrl = ${item.url != null ? item.url : '/'},
+                         lower = ${#strings.toLowerCase(rawUrl)},
+                         safeUrl = ${lower.startsWith('http://') or lower.startsWith('https://') or lower.startsWith('/') or lower.startsWith('mailto:') ? rawUrl : '/'}">
               <a class="fzx-footer-link"
                  th:href="${safeUrl}"
                  th:attr="rel=${safeUrl != null and #strings.startsWith(#strings.toLowerCase(safeUrl), 'http') ? 'noopener' : null}">

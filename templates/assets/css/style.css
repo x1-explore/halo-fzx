@@ -201,11 +201,6 @@ body {
   }
 }
 
-@media (min-width: 1024px) {
-  .fzx-main-grid--single {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
 
 /* === Header === */
 .fzx-header {

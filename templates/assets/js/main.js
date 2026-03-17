@@ -25,8 +25,8 @@
         if (source === 'user' && (saved === 'light' || saved === 'dark')) {
           return saved;
         }
-        // Clean legacy value without source to honor new defaults
-        if (source !== 'user' && saved) {
+        // Clean legacy value only when key exists but source is missing/null
+        if (!source && saved) {
           localStorage.removeItem(COLOR_STORAGE_KEY);
         }
       } catch (err) {
