@@ -1,0 +1,74 @@
+<!doctype html>
+<html
+  xmlns:th="https://www.thymeleaf.org"
+  th:replace="~{modules/layout :: html(
+    title       = '归档 - ' + ${site.title},
+    hero        = null,
+    content     = ~{::content},
+    head        = null,
+    footer      = null,
+    sidebar     = null,
+    contentClass= null
+  )}"
+>
+  <th:block th:fragment="content">
+
+    <div class="fzx-page-hero">
+      <h1 class="fzx-page-hero-title">时光归档</h1>
+      <p class="fzx-page-hero-desc">岁月流转，每一篇文字都是宇宙中的一颗星</p>
+    </div>
+
+    <!-- Archive list grouped by year/month -->
+    <div class="fzx-glass" style="padding:2rem">
+      <div class="fzx-archive-wrap" th:if="${archives.total gt 0}">
+        <th:block th:each="archive : ${archives.items}">
+          <div class="fzx-archive-year">
+            <div class="fzx-archive-year-header">
+              <span class="fzx-archive-year-num" th:text="${archive.year}">2024</span>
+              <div class="fzx-archive-year-line"></div>
+            </div>
+
+            <th:block th:each="monthData : ${archive.months}">
+              <div style="margin-bottom:1rem">
+                <div style="color:var(--text-muted);font-size:0.8rem;font-family:var(--font-mono);margin-bottom:0.5rem;padding-left:0.25rem">
+                  <span th:text="${monthData.month}">01</span>
+                  月
+                </div>
+                <ul class="fzx-archive-list">
+                  <li th:each="post : ${monthData.posts}">
+                    <a class="fzx-archive-item" th:href="${post.status.permalink}">
+                      <span class="fzx-archive-date"
+                            th:text="${#dates.format(post.spec.publishTime,'MM-dd')}">01-01</span>
+                      <span class="fzx-archive-title" th:text="${post.spec.title}">文章标题</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </th:block>
+
+          </div>
+        </th:block>
+      </div>
+
+      <div class="fzx-empty" th:if="${archives.total == 0}">
+        <div class="fzx-empty-icon">✦</div>
+        <p>暂无文章归档</p>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <th:block
+      th:if="${archives.hasPrevious() or archives.hasNext()}"
+      th:replace="~{modules/pagination :: pagination(
+        context     = '/archives/',
+        prevUrl     = ${archives.prevUrl},
+        nextUrl     = ${archives.nextUrl},
+        totalPages  = ${archives.totalPages},
+        page        = ${archives.page},
+        hasPrevious = ${archives.hasPrevious()},
+        hasNext     = ${archives.hasNext()}
+      )}"
+    />
+
+  </th:block>
+</html>

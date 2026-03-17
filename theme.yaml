@@ -1,0 +1,21 @@
+apiVersion: theme.halo.run/v1alpha1
+kind: Theme
+metadata:
+  name: theme-fzx
+spec:
+  displayName: FZX - 方舟星系
+  author:
+    name: FZX
+    website: https://github.com/x1-explore/halo-fzx
+  description: 一个融合浪漫主义与科技感的现代博客主题，如繁星般璀璨，如宇宙般深邃。Where Romanticism Meets Technology.
+  logo: https://raw.githubusercontent.com/x1-explore/halo-fzx/main/templates/assets/images/logo.svg
+  homepage: https://github.com/x1-explore/halo-fzx
+  repo: https://github.com/x1-explore/halo-fzx
+  issues: https://github.com/x1-explore/halo-fzx/issues
+  settingName: "theme-fzx-setting"
+  configMapName: "theme-fzx-configmap"
+  version: 1.0.0
+  requires: ">=2.0.0"
+  license:
+    - name: "MIT"
+      url: "https://github.com/x1-explore/halo-fzx/blob/main/LICENSE"

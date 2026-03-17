@@ -1,0 +1,91 @@
+<aside class="fzx-sidebar" th:fragment="sidebar" xmlns:th="https://www.thymeleaf.org">
+
+  <!-- ── Profile / Site Info Widget ── -->
+  <div class="fzx-widget">
+    <div class="fzx-profile">
+      <div class="fzx-profile-avatar-wrap">
+        <img
+          class="fzx-profile-avatar"
+          th:src="${#strings.isEmpty(site.logo) ? '/assets/images/logo.svg' : site.logo}"
+          th:alt="${site.title}"
+        />
+      </div>
+      <div class="fzx-profile-name" th:text="${site.title}">FZX</div>
+      <p class="fzx-profile-desc" th:text="${site.subtitle}">Where Romanticism Meets Technology</p>
+    </div>
+  </div>
+
+  <!-- ── Recent Posts Widget ── -->
+  <div class="fzx-widget" th:with="recentPosts = ${postFinder.list(1, 6)}">
+    <h3 class="fzx-widget-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+        <polyline points="14 2 14 8 20 8"></polyline>
+      </svg>
+      最新文章
+    </h3>
+    <ul class="fzx-recent-list">
+      <li th:each="post : ${recentPosts.items}">
+        <a class="fzx-recent-item" th:href="${post.status.permalink}">
+          <img
+            th:if="${!#strings.isEmpty(post.spec.cover)}"
+            class="fzx-recent-thumb"
+            th:src="${post.spec.cover}"
+            th:alt="${post.spec.title}"
+          />
+          <div class="fzx-recent-info">
+            <div class="fzx-recent-title" th:text="${post.spec.title}">文章标题</div>
+            <div class="fzx-recent-date" th:text="${#dates.format(post.spec.publishTime,'yyyy-MM-dd')}">日期</div>
+          </div>
+        </a>
+      </li>
+    </ul>
+    <div th:if="${recentPosts.total == 0}" class="fzx-empty" style="padding:1rem 0">
+      <span style="color:var(--text-muted);font-size:0.82rem">暂无文章</span>
+    </div>
+  </div>
+
+  <!-- ── Categories Widget ── -->
+  <div class="fzx-widget" th:with="cats = ${categoryFinder.listAsTree()}">
+    <h3 class="fzx-widget-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+      </svg>
+      分类
+    </h3>
+    <ul class="fzx-cats-list">
+      <li class="fzx-cat-item" th:each="cat : ${cats}">
+        <a th:href="${cat.status.permalink}">
+          <span th:text="${cat.spec.displayName}">分类</span>
+          <span class="fzx-cat-count" th:text="${cat.status.postCount ?: 0}">0</span>
+        </a>
+      </li>
+    </ul>
+    <div th:if="${#lists.isEmpty(cats)}" style="color:var(--text-muted);font-size:0.82rem;padding:0.5rem 0">
+      暂无分类
+    </div>
+  </div>
+
+  <!-- ── Tags Widget ── -->
+  <div class="fzx-widget" th:with="tags = ${tagFinder.listAll()}">
+    <h3 class="fzx-widget-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+        <line x1="7" y1="7" x2="7.01" y2="7"></line>
+      </svg>
+      标签云
+    </h3>
+    <div class="fzx-tag-cloud">
+      <a
+        class="fzx-tag-cloud-item"
+        th:each="tag : ${tags}"
+        th:href="${tag.status.permalink}"
+        th:text="'#' + ${tag.spec.displayName}"
+      >#标签</a>
+    </div>
+    <div th:if="${#lists.isEmpty(tags)}" style="color:var(--text-muted);font-size:0.82rem">
+      暂无标签
+    </div>
+  </div>
+
+</aside>

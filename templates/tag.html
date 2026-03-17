@@ -1,0 +1,48 @@
+<!doctype html>
+<html
+  xmlns:th="https://www.thymeleaf.org"
+  th:replace="~{modules/layout :: html(
+    title       = '#' + ${tag.spec.displayName} + ' - ' + ${site.title},
+    hero        = null,
+    content     = ~{::content},
+    head        = null,
+    footer      = null,
+    sidebar     = null,
+    contentClass= null
+  )}"
+>
+  <th:block th:fragment="content">
+
+    <div class="fzx-page-hero">
+      <h1 class="fzx-page-hero-title">
+        <span style="opacity:0.7">#</span><span th:text="${tag.spec.displayName}">标签</span>
+      </h1>
+      <p class="fzx-page-hero-desc" th:text="${posts.total + ' 篇相关文章'}">0 篇文章</p>
+    </div>
+
+    <div class="fzx-post-grid" th:if="${posts.total gt 0}">
+      <th:block th:each="post : ${posts.items}">
+        <th:block th:replace="~{modules/post-card :: post-card(${post})}" />
+      </th:block>
+    </div>
+
+    <div class="fzx-empty" th:if="${posts.total == 0}">
+      <div class="fzx-empty-icon">✦</div>
+      <p>该标签下暂无文章</p>
+    </div>
+
+    <th:block
+      th:if="${posts.hasPrevious() or posts.hasNext()}"
+      th:replace="~{modules/pagination :: pagination(
+        context     = ${tag.status.permalink + '/'},
+        prevUrl     = ${posts.prevUrl},
+        nextUrl     = ${posts.nextUrl},
+        totalPages  = ${posts.totalPages},
+        page        = ${posts.page},
+        hasPrevious = ${posts.hasPrevious()},
+        hasNext     = ${posts.hasNext()}
+      )}"
+    />
+
+  </th:block>
+</html>

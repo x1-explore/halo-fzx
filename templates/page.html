@@ -1,0 +1,92 @@
+<!doctype html>
+<html
+  xmlns:th="https://www.thymeleaf.org"
+  th:replace="~{modules/layout :: html(
+    title       = ${singlePage.spec.title} + ' - ' + ${site.title},
+    hero        = ~{::hero},
+    content     = ~{::content},
+    head        = null,
+    footer      = ~{::footer},
+    sidebar     = ~{::sidebar},
+    contentClass= null
+  )}"
+>
+  <th:block th:fragment="hero">
+    <div
+      th:if="${!#strings.isEmpty(singlePage.spec.cover)}"
+      class="fzx-post-hero"
+      th:style="|background-image: url('${singlePage.spec.cover}')|"
+    ></div>
+    <div class="fzx-header-spacer" th:unless="${!#strings.isEmpty(singlePage.spec.cover)}"></div>
+  </th:block>
+
+  <th:block th:fragment="sidebar">
+    <aside class="fzx-sidebar">
+      <div class="fzx-widget fzx-toc-widget">
+        <h3 class="fzx-widget-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="8" y1="6" x2="21" y2="6"></line>
+            <line x1="8" y1="12" x2="21" y2="12"></line>
+            <line x1="8" y1="18" x2="21" y2="18"></line>
+            <line x1="3" y1="6" x2="3.01" y2="6"></line>
+            <line x1="3" y1="12" x2="3.01" y2="12"></line>
+            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+          </svg>
+          目录
+        </h3>
+        <div class="fzx-toc-scroll"></div>
+      </div>
+    </aside>
+  </th:block>
+
+  <th:block th:fragment="footer">
+    <script>/* TOC populated by main.js */</script>
+  </th:block>
+
+  <th:block th:fragment="content">
+    <article class="fzx-post-wrap">
+
+      <header class="fzx-post-header">
+        <h1 class="fzx-post-title" th:text="${singlePage.spec.title}">页面标题</h1>
+        <div class="fzx-post-meta-bar">
+          <span class="fzx-meta-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span th:text="${#dates.format(singlePage.spec.publishTime,'yyyy-MM-dd')}">日期</span>
+          </span>
+          <span class="fzx-meta-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <span th:text="${singlePage.stats?.visit ?: 0}">0</span>
+          </span>
+        </div>
+      </header>
+
+      <div class="fzx-post-content">
+        <div
+          id="fzx-post-content"
+          class="fzx-prose"
+          th:utext="${singlePage.content.content}"
+        ></div>
+      </div>
+
+      <!-- Comment section for single pages -->
+      <div id="comment" class="fzx-comment-section"
+           th:if="${haloCommentEnabled and singlePage.spec.allowComment}">
+        <h3 class="fzx-comment-heading">评论</h3>
+        <halo:comment
+          group="content.halo.run"
+          kind="SinglePage"
+          th:attr="name=${singlePage.metadata.name}"
+        />
+      </div>
+
+    </article>
+  </th:block>
+</html>

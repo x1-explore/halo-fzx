@@ -1,0 +1,57 @@
+<footer class="fzx-footer" th:fragment="footer" xmlns:th="https://www.thymeleaf.org">
+  <div class="fzx-container">
+    <div class="fzx-footer-grid">
+
+      <!-- Brand column -->
+      <div>
+        <div class="fzx-footer-brand-name" th:text="${site.title}">FZX</div>
+        <p class="fzx-footer-brand-desc" th:text="${site.subtitle}">Where Romanticism Meets Technology</p>
+        <p class="fzx-footer-brand-desc" style="margin-top:0.5rem; font-size:0.75rem; opacity:0.6;">
+          ✦ &nbsp;方舟星系 · 浪漫与科技的交汇&nbsp; ✦
+        </p>
+      </div>
+
+      <!-- Navigation links -->
+      <div>
+        <div class="fzx-footer-col-title">导航</div>
+        <ul class="fzx-footer-links">
+          <li><a th:href="@{/}">首页</a></li>
+          <li><a th:href="@{/archives}">归档</a></li>
+          <li><a th:href="@{/categories}">分类</a></li>
+          <li><a th:href="@{/tags}">标签</a></li>
+        </ul>
+      </div>
+
+      <!-- Extra links -->
+      <div>
+        <div class="fzx-footer-col-title">更多</div>
+        <ul class="fzx-footer-links">
+          <li><a href="/login" sec:authorize="isAnonymous()">登录</a></li>
+          <li><a href="/console" sec:authorize="isAuthenticated()" target="_blank">控制台</a></li>
+          <li><a href="https://halo.run" target="_blank" rel="noopener">Halo</a></li>
+          <li><a href="https://github.com/x1-explore/halo-fzx" target="_blank" rel="noopener">主题源码</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="fzx-footer-bottom">
+      <span
+        th:if="${!#strings.isEmpty(theme.config.global.footer_info)}"
+        th:text="${theme.config.global.footer_info}"
+      ></span>
+      <span th:unless="${!#strings.isEmpty(theme.config.global.footer_info)}">
+        Powered by <a href="https://halo.run" target="_blank" rel="noopener">Halo</a> &amp; FZX Theme
+      </span>
+
+      <span>
+        &copy;
+        <span th:if="${!#strings.isEmpty(theme.config.global.site_since)}"
+              th:text="${theme.config.global.site_since} + ' - '"></span>
+        <span th:text="${#dates.format(#dates.createNow(),'yyyy')}">2024</span>
+        &nbsp;
+        <span th:text="${site.title}">Site</span>
+      </span>
+    </div>
+  </div>
+</footer>

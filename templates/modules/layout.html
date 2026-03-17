@@ -1,0 +1,123 @@
+<!doctype html>
+<html
+  th:lang="${#locale.toLanguageTag}"
+  th:fragment="html(title, hero, content, head, footer, sidebar, contentClass)"
+  xmlns:th="https://www.thymeleaf.org"
+>
+  <head>
+    <th:block th:replace="~{modules/base-head :: base-head(title = ${title})}" />
+    <th:block th:if="${head != null}">
+      <th:block th:replace="${head}" />
+    </th:block>
+  </head>
+  <body>
+    <!-- Animated starfield canvas -->
+    <canvas id="fzx-starfield" aria-hidden="true"></canvas>
+
+    <!-- Reading progress bar -->
+    <div id="fzx-reading-progress" aria-hidden="true"></div>
+
+    <!-- Header -->
+    <th:block th:replace="~{modules/header :: header}" />
+
+    <!-- Hero area (full-screen for home / cover for posts / spacer for others) -->
+    <th:block th:if="${hero != null}">
+      <th:block th:replace="${hero}" />
+    </th:block>
+    <th:block th:unless="${hero != null}">
+      <div class="fzx-header-spacer"></div>
+    </th:block>
+
+    <!-- Main content grid -->
+    <main>
+      <div class="fzx-container">
+        <div class="fzx-main-grid" th:classappend="${contentClass}">
+          <!-- Primary content column -->
+          <div class="fzx-content-col">
+            <th:block th:replace="${content}" />
+          </div>
+
+          <!-- Sidebar column -->
+          <th:block th:if="${sidebar != null}">
+            <th:block th:replace="${sidebar}" />
+          </th:block>
+          <th:block th:unless="${sidebar != null}">
+            <th:block th:replace="~{modules/sidebar :: sidebar}" />
+          </th:block>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <th:block th:replace="~{modules/footer :: footer}" />
+
+    <!-- Post-body scripts (e.g. TOC trigger) -->
+    <th:block th:if="${footer != null}">
+      <th:block th:replace="${footer}" />
+    </th:block>
+
+    <!-- Back-to-top button -->
+    <button
+      id="fzx-back-top"
+      class="fzx-back-top"
+      aria-label="回到顶部"
+      th:if="${theme.config.global.show_scroll_button != false}"
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="18 15 12 9 6 15"></polyline>
+      </svg>
+    </button>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="fzx-mobile-menu" class="fzx-mobile-menu" th:with="menu = ${menuFinder.getPrimary()}">
+      <button id="fzx-mobile-close" class="fzx-mobile-close" aria-label="关闭菜单">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <th:block th:if="${menu != null}" th:each="item : ${menu.menuItems}">
+        <a class="fzx-mobile-menu-link"
+           th:href="@{${item.status.href}}"
+           th:text="${item.status.displayName}"
+           th:target="${item.spec.target?.value}">菜单</a>
+      </th:block>
+      <th:block th:if="${menu == null}">
+        <a class="fzx-mobile-menu-link" th:href="@{/}">首页</a>
+        <a class="fzx-mobile-menu-link" th:href="@{/archives}">归档</a>
+        <a class="fzx-mobile-menu-link" th:href="@{/categories}">分类</a>
+        <a class="fzx-mobile-menu-link" th:href="@{/tags}">标签</a>
+      </th:block>
+    </div>
+
+    <!-- Search Overlay -->
+    <div id="fzx-search-overlay" class="fzx-search-overlay">
+      <div class="fzx-search-box">
+        <form th:action="@{/search}" method="get">
+          <div class="fzx-search-input-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input
+              type="text"
+              name="keyword"
+              id="fzx-search-input"
+              class="fzx-search-input"
+              placeholder="搜索文章..."
+              autocomplete="off"
+            />
+          </div>
+        </form>
+        <p class="fzx-search-hint">
+          按 <span class="fzx-kbd">Enter</span> 搜索 ·
+          <span class="fzx-kbd">Esc</span> 关闭 ·
+          <span class="fzx-kbd">Ctrl+K</span> 快速打开
+        </p>
+      </div>
+    </div>
+
+    <!-- Image Lightbox (populated by JS) -->
+    <div id="fzx-lightbox" class="fzx-lightbox"></div>
+  </body>
+</html>

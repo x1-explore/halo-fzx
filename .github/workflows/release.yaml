@@ -1,0 +1,104 @@
+name: Build & Release Theme
+
+on:
+  # Trigger on version tags like v1.0.0
+  push:
+    tags:
+      - 'v*'
+  # Also allow manual trigger for testing
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to package (e.g. 1.0.0)'
+        required: false
+        default: 'dev'
+
+jobs:
+  build:
+    name: Package theme zip
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # needed to create GitHub Releases
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # ── Determine version from tag or input ──────────────────────────────
+      - name: Determine version
+        id: version
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            VERSION="${GITHUB_REF#refs/tags/v}"
+          else
+            VERSION="${{ github.event.inputs.version || 'dev' }}"
+          fi
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "zip_name=theme-fzx-${VERSION}.zip" >> "$GITHUB_OUTPUT"
+          echo "Building version: ${VERSION}"
+
+      # ── Update version in theme.yaml to match the tag ───────────────────
+      - name: Patch version in theme.yaml
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          sed -i "s/^  version:.*$/  version: ${VERSION}/" theme.yaml
+          echo "Patched theme.yaml version to ${VERSION}"
+          grep "version:" theme.yaml
+
+      # ── Package into a Halo-installable zip ─────────────────────────────
+      # Halo expects: theme.yaml + settings.yaml + templates/ at the zip root
+      - name: Create installable zip
+        run: |
+          ZIP="${{ steps.version.outputs.zip_name }}"
+
+          zip -r "${ZIP}" \
+            theme.yaml \
+            settings.yaml \
+            templates/ \
+            LICENSE \
+            README.md \
+            --exclude "*.git*" \
+            --exclude "*__pycache__*" \
+            --exclude "*.DS_Store"
+
+          echo "Created ${ZIP} ($(du -sh ${ZIP} | cut -f1))"
+          unzip -l "${ZIP}" | head -40
+
+      # ── Upload zip as a build artifact (always available) ────────────────
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.version.outputs.zip_name }}
+          path: ${{ steps.version.outputs.zip_name }}
+          retention-days: 30
+
+      # ── Create a GitHub Release (only on version tags) ──────────────────
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "FZX 方舟星系 v${{ steps.version.outputs.version }}"
+          body: |
+            ## FZX · 方舟星系 v${{ steps.version.outputs.version }}
+
+            > 浪漫与科技的交汇 · Where Romanticism Meets Technology
+
+            ### 🚀 安装方法
+
+            1. 下载下方的 `theme-fzx-${{ steps.version.outputs.version }}.zip`
+            2. 登录 Halo 后台 → **外观** → **主题** → **安装**
+            3. 点击上传，选择刚下载的 zip 文件
+            4. 安装完成后点击 **启用** 即可
+
+            ### ✦ 主题特色
+            - 🌌 动态星空背景 + 流星效果
+            - 💎 玻璃拟态卡片设计
+            - 📖 文章自动目录 + 阅读进度条
+            - 🔍 全站搜索 (Ctrl+K)
+            - 📱 完整移动端适配
+
+            > 需要 Halo >= 2.0.0
+          files: ${{ steps.version.outputs.zip_name }}
+          draft: false
+          prerelease: false

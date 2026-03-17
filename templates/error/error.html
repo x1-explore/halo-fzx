@@ -1,0 +1,54 @@
+<!doctype html>
+<html
+  xmlns:th="https://www.thymeleaf.org"
+  th:replace="~{modules/layout :: html(
+    title       = ${error.status} + ' ' + ${#strings.defaultString(error.title, 'Error')} + ' - ' + ${site.title},
+    hero        = null,
+    content     = ~{::content},
+    head        = null,
+    footer      = null,
+    sidebar     = null,
+    contentClass= null
+  )}"
+>
+  <th:block th:fragment="content">
+
+    <div class="fzx-error-page">
+      <!-- Decorative nebula -->
+      <div aria-hidden="true" style="
+        position:absolute;width:500px;height:500px;border-radius:50%;
+        background:radial-gradient(ellipse,rgba(129,140,248,0.08) 0%,transparent 70%);
+        top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;
+      "></div>
+
+      <div class="fzx-error-code" th:text="${error.status}">404</div>
+
+      <p class="fzx-error-msg"
+         th:text="${#strings.defaultString(error.title, '页面走丢了')}">
+        页面走丢了
+      </p>
+
+      <p class="fzx-error-detail"
+         th:if="${!#strings.isEmpty(error.detail)}"
+         th:text="${error.detail}"></p>
+      <p class="fzx-error-detail"
+         th:unless="${!#strings.isEmpty(error.detail)}">
+        也许这颗星已经飘向了另一个星系…
+      </p>
+
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center">
+        <a class="fzx-btn fzx-btn-primary" th:href="@{/}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          回到首页
+        </a>
+        <button class="fzx-btn fzx-btn-ghost" onclick="history.back()">
+          ← 返回上页
+        </button>
+      </div>
+    </div>
+
+  </th:block>
+</html>

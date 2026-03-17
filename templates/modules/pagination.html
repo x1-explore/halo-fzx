@@ -1,0 +1,45 @@
+<div
+  th:fragment="pagination(context, prevUrl, nextUrl, totalPages, page, hasPrevious, hasNext)"
+  class="fzx-pagination"
+  xmlns:th="https://www.thymeleaf.org"
+>
+  <a
+    th:href="@{${prevUrl}}"
+    class="fzx-page-btn"
+    th:classappend="${!hasPrevious} ? 'fzx-page-disabled' : ''"
+    aria-label="上一页"
+  >
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+    上一页
+  </a>
+
+  <span class="fzx-page-info">
+    <select
+      id="fzx-page-select"
+      aria-label="跳转页码"
+      style="background:transparent;border:none;color:var(--text-muted);font-size:0.82rem;cursor:pointer;outline:none"
+    >
+      <option
+        th:each="i : ${#numbers.sequence(1, totalPages)}"
+        th:selected="${i == page}"
+        th:value="|${context}page/${i}|"
+        th:text="|${i} / ${totalPages}|"
+        style="background:var(--space-800);color:var(--text-primary)"
+      ></option>
+    </select>
+  </span>
+
+  <a
+    th:href="@{${nextUrl}}"
+    class="fzx-page-btn"
+    th:classappend="${!hasNext} ? 'fzx-page-disabled' : ''"
+    aria-label="下一页"
+  >
+    下一页
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </a>
+</div>
