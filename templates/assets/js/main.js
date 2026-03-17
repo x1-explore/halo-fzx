@@ -45,11 +45,12 @@
     };
 
     const getDefaultScheme = () => {
-      const preset = doc.dataset.defaultTheme || 'dark';
+      const preset = (doc.dataset.defaultTheme || 'light').toLowerCase();
       if (preset === 'system') {
         return window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
       }
-      return preset === 'light' ? 'light' : 'dark';
+      if (preset === 'dark') return 'dark';
+      return 'light';
     };
 
     const applyScheme = (mode, persist = true) => {

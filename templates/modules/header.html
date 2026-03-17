@@ -54,7 +54,7 @@
 
       <!-- ── Actions ── -->
       <div class="fzx-header-actions">
-        <th:block th:if="${theme.config.appearance.show_theme_toggle != false}">
+        <th:block th:if="${theme.config.appearance == null or theme.config.appearance.show_theme_toggle != false}">
           <button class="fzx-icon-btn fzx-theme-toggle" type="button" data-fzx-theme-toggle aria-label="切换主题">
             <svg class="fzx-theme-icon fzx-theme-icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="5"></circle>

@@ -15,9 +15,10 @@
         const storageSourceKey = 'fzx-color-scheme-source';
         const saved = localStorage.getItem(storageKey);
         const savedSource = localStorage.getItem(storageSourceKey);
-        const setting = /*[[${theme.config.appearance.color_scheme}]]*/ 'dark';
+        const setting = /*[[${theme.config.appearance.color_scheme}]]*/ 'light';
         // Halo/Thymeleaf may serialize null as literal "null", normalize both cases
-        const normalized = (!setting || setting === 'null' || setting === null) ? 'dark' : setting;
+        const normalizedRaw = (!setting || setting === 'null') ? 'light' : String(setting).toLowerCase();
+        const normalized = (normalizedRaw === 'light' || normalizedRaw === 'dark' || normalizedRaw === 'system') ? normalizedRaw : 'light';
         const systemPrefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
         const fallback = normalized === 'system' ? (systemPrefersLight ? 'light' : 'dark') : normalized;
         const userPreferred = (savedSource === 'user' && (saved === 'light' || saved === 'dark')) ? saved : null;
