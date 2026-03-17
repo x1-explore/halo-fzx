@@ -2,7 +2,7 @@
 <html
   xmlns:th="https://www.thymeleaf.org"
   th:replace="~{modules/layout :: html(
-    title       = '归档 - ' + ${site.title},
+    title       = '归档 - ' + ${!#strings.isEmpty(theme.config.branding.site_title) ? theme.config.branding.site_title : site.title},
     hero        = null,
     content     = ~{::content},
     head        = null,

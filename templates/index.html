@@ -2,7 +2,7 @@
 <html
   xmlns:th="https://www.thymeleaf.org"
   th:replace="~{modules/layout :: html(
-    title    = ${site.title},
+    title    = ${!#strings.isEmpty(theme.config.branding.site_title) ? theme.config.branding.site_title : site.title},
     hero     = ~{::hero},
     content  = ~{::content},
     head     = null,
@@ -13,23 +13,25 @@
 >
 
   <!-- ── Full-screen hero for homepage ── -->
-  <th:block th:fragment="hero">
+  <th:block th:fragment="hero"
+            th:with="brandingTitle = ${!#strings.isEmpty(theme.config.branding.site_title) ? theme.config.branding.site_title : site.title},
+                     brandingSubtitle = ${!#strings.isEmpty(theme.config.branding.site_subtitle) ? theme.config.branding.site_subtitle : site.subtitle}">
     <section class="fzx-hero">
       <div class="fzx-hero-content">
         <div class="fzx-hero-eyebrow">
           <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
             <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
-          </svg>
+            </svg>
           方舟星系 · FZX Theme
         </div>
 
         <h1 class="fzx-hero-title"
-            th:text="${!#strings.isEmpty(theme.config.hero.title) ? theme.config.hero.title : site.title}">
+            th:text="${!#strings.isEmpty(theme.config.hero.title) ? theme.config.hero.title : brandingTitle}">
           FZX 方舟星系
         </h1>
 
         <p class="fzx-hero-subtitle"
-           th:text="${!#strings.isEmpty(theme.config.hero.subtitle) ? theme.config.hero.subtitle : site.subtitle}">
+           th:text="${!#strings.isEmpty(theme.config.hero.subtitle) ? theme.config.hero.subtitle : brandingSubtitle}">
           Where Romanticism Meets Technology
         </p>
 

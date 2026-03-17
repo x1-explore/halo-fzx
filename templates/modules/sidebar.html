@@ -1,4 +1,11 @@
-<aside class="fzx-sidebar" th:fragment="sidebar" xmlns:th="https://www.thymeleaf.org">
+<aside class="fzx-sidebar" th:fragment="sidebar" xmlns:th="https://www.thymeleaf.org"
+       th:with="brandingTitle = ${!#strings.isEmpty(theme.config.branding.site_title) ? theme.config.branding.site_title : site.title},
+                brandingSubtitle = ${!#strings.isEmpty(theme.config.branding.site_subtitle) ? theme.config.branding.site_subtitle : site.subtitle},
+                brandingAvatar = ${
+                  !#strings.isEmpty(theme.config.branding.avatar_url) ? theme.config.branding.avatar_url :
+                  !#strings.isEmpty(theme.config.branding.logo_url) ? theme.config.branding.logo_url :
+                  site.logo
+                }">
 
   <!-- ── Profile / Site Info Widget ── -->
   <div class="fzx-widget">
@@ -6,12 +13,12 @@
       <div class="fzx-profile-avatar-wrap">
         <img
           class="fzx-profile-avatar"
-          th:src="${#strings.isEmpty(site.logo) ? '/assets/images/logo.svg' : site.logo}"
-          th:alt="${site.title}"
+          th:src="${#strings.isEmpty(brandingAvatar) ? '/assets/images/logo.svg' : brandingAvatar}"
+          th:alt="${brandingTitle}"
         />
       </div>
-      <div class="fzx-profile-name" th:text="${site.title}">FZX</div>
-      <p class="fzx-profile-desc" th:text="${site.subtitle}">Where Romanticism Meets Technology</p>
+      <div class="fzx-profile-name" th:text="${brandingTitle}">FZX</div>
+      <p class="fzx-profile-desc" th:text="${brandingSubtitle}">Where Romanticism Meets Technology</p>
     </div>
   </div>
 

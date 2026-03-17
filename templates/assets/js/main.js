@@ -6,6 +6,72 @@
 (function () {
   'use strict';
 
+  const COLOR_STORAGE_KEY = 'fzx-color-scheme';
+
+  /* ============================================================
+     Color Scheme Toggle (Light / Dark)
+  ============================================================ */
+  function initColorScheme() {
+    const toggles = document.querySelectorAll('[data-fzx-theme-toggle]');
+    if (!toggles.length) return;
+
+    const doc = document.documentElement;
+
+    const getDefaultScheme = () => {
+      const preset = doc.dataset.defaultTheme || 'dark';
+      if (preset === 'system') {
+        return window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      }
+      return preset === 'light' ? 'light' : 'dark';
+    };
+
+    const applyScheme = (mode, persist = true) => {
+      const value = mode === 'light' ? 'light' : 'dark';
+      doc.setAttribute('data-theme', value);
+      if (persist) {
+        try {
+          localStorage.setItem(COLOR_STORAGE_KEY, value);
+        } catch (err) {
+          console.warn('Unable to persist theme', err);
+        }
+      }
+      toggles.forEach((btn) => btn.setAttribute('data-active-mode', value));
+    };
+
+    const saved = (() => {
+      try {
+        const val = localStorage.getItem(COLOR_STORAGE_KEY);
+        if (val === 'light' || val === 'dark') return val;
+      } catch (err) {
+        console.warn('Unable to read theme preference', err);
+      }
+      return null;
+    })();
+
+    applyScheme(saved || getDefaultScheme(), false);
+
+    toggles.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const current = doc.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+        const next = current === 'light' ? 'dark' : 'light';
+        applyScheme(next);
+      });
+    });
+
+    if (window.matchMedia) {
+      const mql = window.matchMedia('(prefers-color-scheme: light)');
+      mql.addEventListener('change', (e) => {
+        // Only react to system change when user did not explicitly choose
+        const stored = (() => {
+          try { return localStorage.getItem(COLOR_STORAGE_KEY); } catch { return null; }
+        })();
+        if (!stored) {
+          applyScheme(e.matches ? 'light' : 'dark', false);
+        }
+      });
+    }
+  }
+
   /* ============================================================
      Starfield Canvas Animation
   ============================================================ */
@@ -498,6 +564,7 @@
      Init
   ============================================================ */
   document.addEventListener('DOMContentLoaded', () => {
+    initColorScheme();
     initStarfield();
     initHeader();
     initReadingProgress();

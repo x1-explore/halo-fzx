@@ -1,11 +1,13 @@
-<footer class="fzx-footer" th:fragment="footer" xmlns:th="https://www.thymeleaf.org">
+<footer class="fzx-footer" th:fragment="footer" xmlns:th="https://www.thymeleaf.org"
+        th:with="brandingTitle = ${!#strings.isEmpty(theme.config.branding.site_title) ? theme.config.branding.site_title : site.title},
+                 brandingSubtitle = ${!#strings.isEmpty(theme.config.branding.site_subtitle) ? theme.config.branding.site_subtitle : site.subtitle}">
   <div class="fzx-container">
     <div class="fzx-footer-grid">
 
       <!-- Brand column -->
       <div>
-        <div class="fzx-footer-brand-name" th:text="${site.title}">FZX</div>
-        <p class="fzx-footer-brand-desc" th:text="${site.subtitle}">Where Romanticism Meets Technology</p>
+        <div class="fzx-footer-brand-name" th:text="${brandingTitle}">FZX</div>
+        <p class="fzx-footer-brand-desc" th:text="${brandingSubtitle}">Where Romanticism Meets Technology</p>
         <p class="fzx-footer-brand-desc" style="margin-top:0.5rem; font-size:0.75rem; opacity:0.6;">
           ✦ &nbsp;方舟星系 · 浪漫与科技的交汇&nbsp; ✦
         </p>
@@ -50,7 +52,7 @@
               th:text="${theme.config.global.site_since} + ' - '"></span>
         <span th:text="${#dates.format(#dates.createNow(),'yyyy')}">2024</span>
         &nbsp;
-        <span th:text="${site.title}">Site</span>
+        <span th:text="${brandingTitle}">Site</span>
       </span>
     </div>
   </div>
