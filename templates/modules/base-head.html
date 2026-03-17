@@ -12,15 +12,20 @@
     (function () {
       try {
         const storageKey = 'fzx-color-scheme';
+        const storageSourceKey = 'fzx-color-scheme-source';
         const saved = localStorage.getItem(storageKey);
+        const savedSource = localStorage.getItem(storageSourceKey);
         const setting = /*[[${theme.config.appearance.color_scheme}]]*/ 'dark';
         // Halo/Thymeleaf may serialize null as literal "null", normalize both cases
         const normalized = (!setting || setting === 'null' || setting === null) ? 'dark' : setting;
         const systemPrefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
         const fallback = normalized === 'system' ? (systemPrefersLight ? 'light' : 'dark') : normalized;
-        const mode = saved === 'light' || saved === 'dark' ? saved : fallback;
+        const userPreferred = (savedSource === 'user' && (saved === 'light' || saved === 'dark')) ? saved : null;
+        const mode = userPreferred || fallback;
         const doc = document.documentElement;
         doc.setAttribute('data-theme', mode);
+        doc.classList.toggle('fzx-theme-light', mode === 'light');
+        doc.classList.toggle('fzx-theme-dark', mode !== 'light');
         doc.dataset.defaultTheme = normalized;
       } catch (err) {
         console.error('Theme init error', err);

@@ -7,15 +7,42 @@
   'use strict';
 
   const COLOR_STORAGE_KEY = 'fzx-color-scheme';
+  const COLOR_SOURCE_KEY = 'fzx-color-scheme-source';
 
   /* ============================================================
      Color Scheme Toggle (Light / Dark)
-  ============================================================ */
+   ============================================================ */
   function initColorScheme() {
     const toggles = document.querySelectorAll('[data-fzx-theme-toggle]');
     if (!toggles.length) return;
 
     const doc = document.documentElement;
+
+    const getStoredScheme = () => {
+      try {
+        const saved = localStorage.getItem(COLOR_STORAGE_KEY);
+        const source = localStorage.getItem(COLOR_SOURCE_KEY);
+        if (source === 'user' && (saved === 'light' || saved === 'dark')) {
+          return saved;
+        }
+        // Clean legacy value without source to honor new defaults
+        if (source !== 'user' && saved) {
+          localStorage.removeItem(COLOR_STORAGE_KEY);
+        }
+      } catch (err) {
+        console.warn('Unable to read theme preference', err);
+      }
+      return null;
+    };
+
+    const rememberUserChoice = (value) => {
+      try {
+        localStorage.setItem(COLOR_STORAGE_KEY, value);
+        localStorage.setItem(COLOR_SOURCE_KEY, 'user');
+      } catch (err) {
+        console.warn('Unable to persist theme', err);
+      }
+    };
 
     const getDefaultScheme = () => {
       const preset = doc.dataset.defaultTheme || 'dark';
@@ -28,26 +55,15 @@
     const applyScheme = (mode, persist = true) => {
       const value = mode === 'light' ? 'light' : 'dark';
       doc.setAttribute('data-theme', value);
+      doc.classList.toggle('fzx-theme-light', value === 'light');
+      doc.classList.toggle('fzx-theme-dark', value !== 'light');
       if (persist) {
-        try {
-          localStorage.setItem(COLOR_STORAGE_KEY, value);
-        } catch (err) {
-          console.warn('Unable to persist theme', err);
-        }
+        rememberUserChoice(value);
       }
       toggles.forEach((btn) => btn.setAttribute('data-active-mode', value));
     };
 
-    const saved = (() => {
-      try {
-        const val = localStorage.getItem(COLOR_STORAGE_KEY);
-        if (val === 'light' || val === 'dark') return val;
-      } catch (err) {
-        console.warn('Unable to read theme preference', err);
-      }
-      return null;
-    })();
-
+    const saved = getStoredScheme();
     applyScheme(saved || getDefaultScheme(), false);
 
     toggles.forEach((btn) => {
@@ -62,10 +78,7 @@
       const mql = window.matchMedia('(prefers-color-scheme: light)');
       mql.addEventListener('change', (e) => {
         // Only react to system change when user did not explicitly choose
-        const stored = (() => {
-          try { return localStorage.getItem(COLOR_STORAGE_KEY); } catch { return null; }
-        })();
-        if (!stored) {
+        if (!getStoredScheme()) {
           applyScheme(e.matches ? 'light' : 'dark', false);
         }
       });

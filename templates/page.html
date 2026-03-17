@@ -7,8 +7,8 @@
     content     = ~{::content},
     head        = null,
     footer      = ~{::footer},
-    sidebar     = ~{::sidebar},
-    contentClass= null
+    sidebar     = ${theme.config.page.show_sidebar == true ? ~{::sidebar} : ~{::emptySidebar}},
+    contentClass= ${theme.config.page.center_layout != false ? 'fzx-main-grid--single' : null}
   )}"
 >
   <th:block th:fragment="hero">
@@ -42,6 +42,8 @@
   <th:block th:fragment="footer">
     <script>/* TOC populated by main.js */</script>
   </th:block>
+
+  <th:block th:fragment="emptySidebar"></th:block>
 
   <th:block th:fragment="content">
     <article class="fzx-post-wrap">

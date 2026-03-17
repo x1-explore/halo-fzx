@@ -78,15 +78,15 @@
           class="fzx-auth-btn"
           href="/login"
           th:classappend="${site.allowRegistration} ? 'fzx-auth-btn--with-register' : ''"
+          th:title="${site.allowRegistration} ? '登录 / 注册' : '登录'"
           aria-label="登录或注册"
-          title="登录 / 注册"
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
             <polyline points="10 17 15 12 10 7"></polyline>
             <line x1="15" y1="12" x2="3" y2="12"></line>
           </svg>
-          <span class="fzx-auth-text">登录</span>
+          <span class="fzx-auth-text" th:text="${site.allowRegistration} ? '登录 / 注册' : '登录'">登录</span>
           <span class="fzx-auth-badge" th:if="${site.allowRegistration}">可注册</span>
         </a>
 

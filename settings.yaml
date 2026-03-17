@@ -43,6 +43,10 @@ spec:
           name: subtitle
           label: 横幅副标题 (留空使用站点副标题)
           value: ""
+        - $formkit: text
+          name: badge_text
+          label: 横幅角标文案（留空则不显示）
+          value: ""
     - group: post
       label: 文章设置
       formSchema:
@@ -84,7 +88,7 @@ spec:
         - $formkit: select
           name: color_scheme
           label: 默认配色
-          value: "dark"
+          value: "light"
           options:
             - label: 暗色
               value: "dark"
@@ -96,3 +100,78 @@ spec:
           name: show_theme_toggle
           label: 显示主题切换按钮
           value: true
+    - group: footer
+      label: 页脚与导航
+      formSchema:
+        - $formkit: text
+          name: footer_badge
+          label: 页脚标语
+          value: "✦ 方舟星系 · 浪漫与科技的交汇 ✦"
+        - $formkit: text
+          name: footer_nav_title
+          label: 导航列标题
+          value: "导航"
+        - $formkit: repeater
+          name: footer_nav_links
+          label: 导航链接（留空使用默认）
+          value:
+            - label: 首页
+              url: "/"
+              icon: "🏠"
+            - label: 归档
+              url: "/archives"
+              icon: "🗂️"
+            - label: 分类
+              url: "/categories"
+              icon: "📂"
+            - label: 标签
+              url: "/tags"
+              icon: "🔖"
+          children:
+            - $formkit: text
+              name: label
+              label: 文案
+            - $formkit: text
+              name: url
+              label: 链接
+            - $formkit: text
+              name: icon
+              label: 图标（可填 emoji 或短文字）
+        - $formkit: text
+          name: footer_more_title
+          label: 更多列标题
+          value: "更多"
+        - $formkit: repeater
+          name: footer_more_links
+          label: 更多链接（留空使用默认）
+          value:
+            - label: 登录
+              url: "/login"
+              icon: "→"
+            - label: 控制台
+              url: "/console"
+              icon: "⚙️"
+            - label: 主题源码
+              url: "https://github.com/x1-explore/halo-fzx"
+              icon: "★"
+          children:
+            - $formkit: text
+              name: label
+              label: 文案
+            - $formkit: text
+              name: url
+              label: 链接
+            - $formkit: text
+              name: icon
+              label: 图标（可填 emoji 或短文字）
+    - group: page
+      label: 单页
+      formSchema:
+        - $formkit: checkbox
+          name: center_layout
+          label: 单页内容居中显示
+          value: true
+        - $formkit: checkbox
+          name: show_sidebar
+          label: 显示侧边栏
+          value: false
