@@ -17,7 +17,7 @@
         const savedSource = localStorage.getItem(storageSourceKey);
         const setting = /*[[${theme.config.appearance.color_scheme}]]*/ 'light';
         // Halo/Thymeleaf may serialize null as literal "null", normalize both cases
-        const normalizedRaw = (!setting || setting === 'null' || setting === null) ? 'light' : String(setting).toLowerCase();
+        const normalizedRaw = (!setting || setting === 'null') ? 'light' : String(setting).toLowerCase();
         const normalized = (normalizedRaw === 'light' || normalizedRaw === 'dark' || normalizedRaw === 'system') ? normalizedRaw : 'light';
         const systemPrefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
         const fallback = normalized === 'system' ? (systemPrefersLight ? 'light' : 'dark') : normalized;
