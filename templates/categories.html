@@ -1,0 +1,55 @@
+<!doctype html>
+<html
+  xmlns:th="https://www.thymeleaf.org"
+  th:replace="~{modules/layout :: html(
+    title       = '分类 - ' + ${site.title},
+    hero        = null,
+    content     = ~{::content},
+    head        = null,
+    footer      = null,
+    sidebar     = null,
+    contentClass= null
+  )}"
+>
+  <th:block th:fragment="content">
+
+    <div class="fzx-page-hero">
+      <h1 class="fzx-page-hero-title">文章分类</h1>
+      <p class="fzx-page-hero-desc">探索不同领域的思考与记录</p>
+    </div>
+
+    <div th:with="cats = ${categoryFinder.listAsTree()}">
+
+      <div class="fzx-cats-grid" th:unless="${#lists.isEmpty(cats)}">
+        <a
+          class="fzx-cat-card fzx-reveal"
+          th:each="cat : ${cats}"
+          th:href="${cat.status.permalink}"
+        >
+          <div class="fzx-cat-cover">
+            <img
+              th:if="${!#strings.isEmpty(cat.spec.cover)}"
+              th:src="${cat.spec.cover}"
+              th:alt="${cat.spec.displayName}"
+            />
+            <span th:unless="${!#strings.isEmpty(cat.spec.cover)}">📁</span>
+          </div>
+          <div class="fzx-cat-body">
+            <div class="fzx-cat-name" th:text="${cat.spec.displayName}">分类名</div>
+            <div
+              class="fzx-cat-count"
+              th:text="${(cat.status.postCount ?: 0) + ' 篇文章'}"
+            >0 篇文章</div>
+          </div>
+        </a>
+      </div>
+
+      <div class="fzx-empty" th:if="${#lists.isEmpty(cats)}">
+        <div class="fzx-empty-icon">📂</div>
+        <p>暂无分类</p>
+      </div>
+
+    </div>
+
+  </th:block>
+</html>

@@ -1,0 +1,89 @@
+<header class="fzx-header" th:fragment="header" xmlns:th="https://www.thymeleaf.org"
+        th:with="menu = ${menuFinder.getPrimary()}">
+  <div class="fzx-container" style="width:100%">
+    <div class="fzx-header-inner">
+
+      <!-- ── Logo ── -->
+      <a class="fzx-logo" th:href="@{/}">
+        <img
+          th:if="${!#strings.isEmpty(site.logo)}"
+          th:src="${site.logo}"
+          class="fzx-logo-img"
+          th:alt="${site.title}"
+        />
+        <span class="fzx-logo-text" th:text="${site.title}">FZX</span>
+      </a>
+
+      <!-- ── Primary Navigation ── -->
+      <nav aria-label="主导航">
+        <ul class="fzx-nav">
+          <!-- Dynamic menu from Halo backend -->
+          <th:block th:if="${menu != null and not #lists.isEmpty(menu.menuItems)}">
+            <li class="fzx-nav-item" th:each="item : ${menu.menuItems}">
+              <a
+                class="fzx-nav-link"
+                th:href="@{${item.status.href}}"
+                th:text="${item.status.displayName}"
+                th:target="${item.spec.target?.value}"
+              >菜单</a>
+              <!-- Dropdown for children -->
+              <ul class="fzx-nav-dropdown" th:if="${not #lists.isEmpty(item.children)}">
+                <li th:each="child : ${item.children}">
+                  <a
+                    th:href="@{${child.status.href}}"
+                    th:text="${child.status.displayName}"
+                    th:target="${child.spec.target?.value}"
+                  >子项</a>
+                </li>
+              </ul>
+            </li>
+          </th:block>
+
+          <!-- Fallback static nav if no menu is configured -->
+          <th:block th:unless="${menu != null and not #lists.isEmpty(menu.menuItems)}">
+            <li class="fzx-nav-item"><a class="fzx-nav-link" th:href="@{/}">首页</a></li>
+            <li class="fzx-nav-item"><a class="fzx-nav-link" th:href="@{/archives}">归档</a></li>
+            <li class="fzx-nav-item"><a class="fzx-nav-link" th:href="@{/categories}">分类</a></li>
+            <li class="fzx-nav-item"><a class="fzx-nav-link" th:href="@{/tags}">标签</a></li>
+          </th:block>
+        </ul>
+      </nav>
+
+      <!-- ── Actions ── -->
+      <div class="fzx-header-actions">
+        <!-- Search toggle -->
+        <button id="fzx-search-btn" class="fzx-icon-btn" aria-label="搜索">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+
+        <!-- Login/Console for authenticated users -->
+        <a
+          sec:authorize="isAuthenticated()"
+          href="/console"
+          target="_blank"
+          class="fzx-icon-btn"
+          aria-label="控制台"
+          title="控制台"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 17l6-6-6-6"></path>
+            <line x1="12" y1="19" x2="20" y2="19"></line>
+          </svg>
+        </a>
+
+        <!-- Mobile menu toggle -->
+        <button id="fzx-menu-toggle" class="fzx-icon-btn fzx-menu-toggle" aria-label="菜单">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</header>

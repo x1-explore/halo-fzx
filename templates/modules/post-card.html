@@ -1,0 +1,86 @@
+<article
+  th:fragment="post-card(post)"
+  class="fzx-post-card fzx-reveal"
+  xmlns:th="https://www.thymeleaf.org"
+>
+  <a th:href="${post.status.permalink}" style="text-decoration:none;display:block">
+    <div class="fzx-card-inner" th:classappend="${!#strings.isEmpty(post.spec.cover)} ? 'has-cover' : ''">
+
+      <!-- Cover image -->
+      <div class="fzx-card-cover" th:if="${!#strings.isEmpty(post.spec.cover)}">
+        <img
+          th:src="${post.spec.cover}"
+          th:alt="${post.spec.title}"
+          loading="lazy"
+        />
+      </div>
+
+      <!-- Body -->
+      <div class="fzx-card-body">
+
+        <!-- Categories -->
+        <div class="fzx-card-cats" th:if="${!#lists.isEmpty(post.categories)}">
+          <a
+            class="fzx-badge fzx-badge-primary"
+            th:each="cat,catStat : ${post.categories}"
+            th:if="${catStat.index lt 2}"
+            th:href="${cat.status.permalink}"
+            th:text="${cat.spec.displayName}"
+          >分类</a>
+        </div>
+
+        <!-- Title -->
+        <h2 class="fzx-card-title" th:text="${post.spec.title}">文章标题</h2>
+
+        <!-- Excerpt -->
+        <p class="fzx-card-excerpt"
+           th:text="${!#strings.isEmpty(post.spec.excerpt) ? post.spec.excerpt : post.status.excerpt}">
+          文章摘要
+        </p>
+
+        <!-- Meta row -->
+        <div class="fzx-card-meta">
+          <!-- Date -->
+          <span class="fzx-meta-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span th:text="${#dates.format(post.spec.publishTime,'yyyy-MM-dd')}">日期</span>
+          </span>
+
+          <!-- Views -->
+          <span class="fzx-meta-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <span th:text="${post.stats?.visit ?: 0}">0</span>
+          </span>
+
+          <!-- Comments -->
+          <span class="fzx-meta-item" th:if="${haloCommentEnabled}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <span th:text="${post.stats?.comment ?: 0}">0</span>
+          </span>
+
+          <!-- Tags (inline) -->
+          <div class="fzx-card-tags" th:if="${!#lists.isEmpty(post.tags)}">
+            <a
+              class="fzx-tag-link"
+              th:each="tag,tStat : ${post.tags}"
+              th:if="${tStat.index lt 3}"
+              th:href="${tag.status.permalink}"
+              th:text="${tag.spec.displayName}"
+            >标签</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </a>
+</article>

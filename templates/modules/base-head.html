@@ -1,0 +1,28 @@
+<th:block th:fragment="base-head(title)" xmlns:th="https://www.thymeleaf.org">
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
+  <title th:text="${title}">FZX 方舟星系</title>
+
+  <!-- Favicon -->
+  <link th:unless="${#strings.isEmpty(site.favicon)}" rel="icon" th:href="${site.favicon}" />
+
+  <!-- Preconnect for Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+
+  <!-- Fonts: Playfair Display (romantic serif) + Inter (clean sans) + JetBrains Mono (tech) -->
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&amp;family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap"
+  />
+
+  <!-- Theme CSS -->
+  <link
+    rel="stylesheet"
+    th:href="@{/assets/css/style.css?v={v}(v=${theme.spec.version})}"
+  />
+
+  <!-- Theme JS (deferred) -->
+  <script defer th:src="@{/assets/js/main.js?v={v}(v=${theme.spec.version})}"></script>
+</th:block>

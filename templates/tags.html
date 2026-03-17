@@ -1,0 +1,41 @@
+<!doctype html>
+<html
+  xmlns:th="https://www.thymeleaf.org"
+  th:replace="~{modules/layout :: html(
+    title       = '标签 - ' + ${site.title},
+    hero        = null,
+    content     = ~{::content},
+    head        = null,
+    footer      = null,
+    sidebar     = null,
+    contentClass= null
+  )}"
+>
+  <th:block th:fragment="content">
+
+    <div class="fzx-page-hero">
+      <h1 class="fzx-page-hero-title">标签云</h1>
+      <p class="fzx-page-hero-desc">用标签探索感兴趣的话题</p>
+    </div>
+
+    <div th:with="tags = ${tagFinder.listAll()}">
+
+      <div class="fzx-glass fzx-tags-page-cloud" th:unless="${#lists.isEmpty(tags)}">
+        <a
+          class="fzx-tag-page-pill"
+          th:each="tag : ${tags}"
+          th:href="${tag.status.permalink}"
+        >
+          #<span th:text="${tag.spec.displayName}">标签</span>
+        </a>
+      </div>
+
+      <div class="fzx-empty" th:if="${#lists.isEmpty(tags)}">
+        <div class="fzx-empty-icon">🏷️</div>
+        <p>暂无标签</p>
+      </div>
+
+    </div>
+
+  </th:block>
+</html>

@@ -1,0 +1,60 @@
+apiVersion: v1alpha1
+kind: Setting
+metadata:
+  name: theme-fzx-setting
+spec:
+  forms:
+    - group: global
+      label: 全局设置
+      formSchema:
+        - $formkit: text
+          name: footer_info
+          label: 页脚版权信息
+          value: "Powered by Halo · FZX 方舟星系"
+        - $formkit: text
+          name: site_since
+          label: 建站时间 (如 2024)
+          value: ""
+        - $formkit: checkbox
+          name: show_scroll_button
+          label: 显示返回顶部按钮
+          value: true
+        - $formkit: checkbox
+          name: show_reading_progress
+          label: 显示阅读进度条
+          value: true
+    - group: hero
+      label: 首页横幅
+      formSchema:
+        - $formkit: select
+          name: style
+          label: 横幅样式
+          value: "full"
+          options:
+            - label: 全屏星空
+              value: "full"
+            - label: 常规
+              value: "normal"
+        - $formkit: text
+          name: title
+          label: 横幅标题 (留空使用站点名称)
+          value: ""
+        - $formkit: text
+          name: subtitle
+          label: 横幅副标题 (留空使用站点副标题)
+          value: ""
+    - group: post
+      label: 文章设置
+      formSchema:
+        - $formkit: checkbox
+          name: show_toc
+          label: 显示目录
+          value: true
+        - $formkit: checkbox
+          name: show_upvote
+          label: 显示点赞按钮
+          value: true
+        - $formkit: checkbox
+          name: show_share
+          label: 显示分享按钮
+          value: false

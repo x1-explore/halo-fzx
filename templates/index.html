@@ -1,0 +1,85 @@
+<!doctype html>
+<html
+  xmlns:th="https://www.thymeleaf.org"
+  th:replace="~{modules/layout :: html(
+    title    = ${site.title},
+    hero     = ~{::hero},
+    content  = ~{::content},
+    head     = null,
+    footer   = null,
+    sidebar  = null,
+    contentClass = null
+  )}"
+>
+
+  <!-- ── Full-screen hero for homepage ── -->
+  <th:block th:fragment="hero">
+    <section class="fzx-hero">
+      <div class="fzx-hero-content">
+        <div class="fzx-hero-eyebrow">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+          </svg>
+          方舟星系 · FZX Theme
+        </div>
+
+        <h1 class="fzx-hero-title"
+            th:text="${!#strings.isEmpty(theme.config.hero.title) ? theme.config.hero.title : site.title}">
+          FZX 方舟星系
+        </h1>
+
+        <p class="fzx-hero-subtitle"
+           th:text="${!#strings.isEmpty(theme.config.hero.subtitle) ? theme.config.hero.subtitle : site.subtitle}">
+          Where Romanticism Meets Technology
+        </p>
+
+        <a class="fzx-hero-cta" th:href="@{/archives}">
+          探索文章
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+      </div>
+
+      <div class="fzx-hero-scroll" aria-hidden="true">
+        <span>向下滚动</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+    </section>
+  </th:block>
+
+  <!-- ── Post list content ── -->
+  <th:block th:fragment="content">
+
+    <!-- Post grid -->
+    <div class="fzx-post-grid" th:if="${posts.total gt 0}">
+      <th:block th:each="post : ${posts.items}">
+        <th:block th:replace="~{modules/post-card :: post-card(${post})}" />
+      </th:block>
+    </div>
+
+    <!-- Empty state -->
+    <div class="fzx-empty" th:if="${posts.total == 0}">
+      <div class="fzx-empty-icon">✦</div>
+      <p>暂无文章，快去发布第一篇吧</p>
+    </div>
+
+    <!-- Pagination -->
+    <th:block
+      th:if="${posts.hasPrevious() or posts.hasNext()}"
+      th:replace="~{modules/pagination :: pagination(
+        context     = '/',
+        prevUrl     = ${posts.prevUrl},
+        nextUrl     = ${posts.nextUrl},
+        totalPages  = ${posts.totalPages},
+        page        = ${posts.page},
+        hasPrevious = ${posts.hasPrevious()},
+        hasNext     = ${posts.hasNext()}
+      )}"
+    />
+
+  </th:block>
+</html>
