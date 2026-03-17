@@ -434,13 +434,12 @@
     const prose = document.querySelector('.fzx-prose');
     if (!prose) return;
 
-    const lightbox = document.createElement('div');
-    lightbox.className = 'fzx-lightbox';
-    lightbox.id = 'fzx-lightbox';
+    // Reuse the lightbox element injected by layout.html
+    const lightbox = document.getElementById('fzx-lightbox');
+    if (!lightbox) return;
 
     const img = document.createElement('img');
     lightbox.appendChild(img);
-    document.body.appendChild(lightbox);
 
     prose.querySelectorAll('img').forEach((source) => {
       source.style.cursor = 'zoom-in';

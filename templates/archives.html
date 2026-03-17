@@ -31,8 +31,6 @@
             <th:block th:each="monthData : ${archive.months}">
               <div style="margin-bottom:1rem">
                 <div style="color:var(--text-muted);font-size:0.8rem;font-family:var(--font-mono);margin-bottom:0.5rem;padding-left:0.25rem">
-                  <span th:text="${archive.year}">2024</span>
-                  年
                   <span th:text="${monthData.month}">01</span>
                   月
                 </div>
