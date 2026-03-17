@@ -170,6 +170,7 @@ spec:
         - $formkit: checkbox
           name: center_layout
           label: 单页内容居中显示
+          help: 开启后单页正文会居中且收窄宽度，同时隐藏侧边栏；关闭则与文章页一致
           value: true
         - $formkit: checkbox
           name: show_sidebar
