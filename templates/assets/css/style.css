@@ -75,7 +75,7 @@
 :root[data-theme="light"] {
   color-scheme: light;
   --space-950: #f3f5fb;
-  --space-900: #f8fafc;
+  --space-900: #f1f4fb;
   --space-800: #e5e7eb;
   --space-700: #e2e8f0;
   --space-600: #cbd5e1;
@@ -135,6 +135,10 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   line-height: 1.7;
+}
+
+:root[data-theme="light"] body {
+  background: linear-gradient(180deg, #f1f4fb 0%, #eef2f8 100%);
 }
 
 /* === Star Canvas === */
