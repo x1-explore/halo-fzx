@@ -6,6 +6,36 @@
 
 ---
 
+## 🚀 快速安装到 Halo
+
+### 方法一：下载 Release 包直接安装（推荐）
+
+1. 进入本仓库的 [**Releases 页面**](../../releases)
+2. 下载最新版本的 **`theme-fzx-x.x.x.zip`** 文件
+3. 登录你的 **Halo 后台** → 点击左侧 **外观** → **主题**
+4. 点击右上角 **安装** 按钮 → 选择 **上传本地文件**
+5. 上传刚才下载的 `.zip` 文件，等待安装完成
+6. 点击 **启用** 即可生效 ✅
+
+### 方法二：从源码手动打包安装
+
+如果你想从本仓库源码自行打包：
+
+```bash
+# 1. 克隆本仓库
+git clone https://github.com/x1-explore/halo-fzx.git
+cd halo-fzx
+
+# 2. 打包成 zip（只包含 Halo 需要的文件）
+zip -r theme-fzx.zip theme.yaml settings.yaml templates/ LICENSE README.md
+
+# 3. 在 Halo 后台 → 外观 → 主题 → 安装 → 上传 theme-fzx.zip
+```
+
+> ⚠️ **需要 Halo 版本 `>= 2.0.0`**
+
+---
+
 ## ✦ 特色功能
 
 | 功能 | 说明 |
@@ -30,25 +60,6 @@
 - **强调色**：科技青 `#22d3ee`
 - **字体**：Playfair Display（浪漫衬线）+ Inter（科技无衬线）+ JetBrains Mono（代码等宽）
 - **效果**：毛玻璃卡片、霓虹光晕、平滑过渡动画
-
-## 📦 安装方法
-
-### 方式一：从压缩包安装（推荐）
-
-1. 在 [Releases](https://github.com/x1-explore/halo-fzx/releases) 页面下载最新的 `.zip` 文件
-2. 登录 Halo 后台 → **外观** → **主题** → **安装**
-3. 上传下载的 zip 文件，等待安装完成
-4. 启用主题即可
-
-### 方式二：从本仓库安装
-
-1. 克隆本仓库并打包为 zip：
-   ```bash
-   git clone https://github.com/x1-explore/halo-fzx.git
-   cd halo-fzx
-   zip -r theme-fzx.zip . -x "*.git*" -x "README.md"
-   ```
-2. 在 Halo 后台安装上传的 zip 文件
 
 ## ⚙️ 主题设置
 
