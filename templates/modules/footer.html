@@ -1,6 +1,12 @@
 <footer class="fzx-footer" th:fragment="footer" xmlns:th="https://www.thymeleaf.org"
         th:with="brandingTitle = ${!#strings.isEmpty(theme.config.branding.site_title) ? theme.config.branding.site_title : site.title},
-                 brandingSubtitle = ${!#strings.isEmpty(theme.config.branding.site_subtitle) ? theme.config.branding.site_subtitle : site.subtitle}">
+                 brandingSubtitle = ${!#strings.isEmpty(theme.config.branding.site_subtitle) ? theme.config.branding.site_subtitle : site.subtitle},
+                 footerCfg = ${theme.config.footer},
+                 footerBadge = ${footerCfg != null ? footerCfg.footer_badge : null},
+                 footerNavLinks = ${footerCfg != null ? footerCfg.footer_nav_links : null},
+                 footerMoreLinks = ${footerCfg != null ? footerCfg.footer_more_links : null},
+                 footerNavTitle = ${!#strings.isEmpty(footerCfg != null ? footerCfg.footer_nav_title : null) ? footerCfg.footer_nav_title : '导航'},
+                 footerMoreTitle = ${!#strings.isEmpty(footerCfg != null ? footerCfg.footer_more_title : null) ? footerCfg.footer_more_title : '更多'}">
   <div class="fzx-container">
     <div class="fzx-footer-grid">
 
@@ -8,30 +14,62 @@
       <div>
         <div class="fzx-footer-brand-name" th:text="${brandingTitle}">FZX</div>
         <p class="fzx-footer-brand-desc" th:text="${brandingSubtitle}">Where Romanticism Meets Technology</p>
-        <p class="fzx-footer-brand-desc" style="margin-top:0.5rem; font-size:0.75rem; opacity:0.6;">
+        <p class="fzx-footer-brand-desc" style="margin-top:0.5rem; font-size:0.75rem; opacity:0.6;"
+           th:if="${!#strings.isEmpty(footerBadge)}"
+           th:text="${footerBadge}">
           ✦ &nbsp;方舟星系 · 浪漫与科技的交汇&nbsp; ✦
         </p>
       </div>
 
       <!-- Navigation links -->
       <div>
-        <div class="fzx-footer-col-title">导航</div>
+        <div class="fzx-footer-col-title" th:text="${footerNavTitle}">导航</div>
         <ul class="fzx-footer-links">
-          <li><a th:href="@{/}">首页</a></li>
-          <li><a th:href="@{/archives}">归档</a></li>
-          <li><a th:href="@{/categories}">分类</a></li>
-          <li><a th:href="@{/tags}">标签</a></li>
+          <th:block th:if="${!#lists.isEmpty(footerNavLinks)}">
+            <li th:each="item : ${footerNavLinks}"
+                th:with="rawUrl = ${item.url != null ? item.url : '/'},
+                         lower = ${#strings.toLowerCase(rawUrl)},
+                         safeUrl = ${lower.startsWith('http://') or lower.startsWith('https://') or lower.startsWith('/') or lower.startsWith('mailto:') ? rawUrl : '/'}">
+              <a class="fzx-footer-link"
+                 th:href="${safeUrl}"
+                 th:attr="rel=${safeUrl != null and #strings.startsWith(#strings.toLowerCase(safeUrl), 'http') ? 'noopener' : null}">
+                <span class="fzx-footer-link-icon" th:if="${!#strings.isEmpty(item.icon)}" th:text="${item.icon}">★</span>
+                <span th:text="${item.label}">链接</span>
+              </a>
+            </li>
+          </th:block>
+          <th:block th:unless="${!#lists.isEmpty(footerNavLinks)}">
+            <li><a class="fzx-footer-link" th:href="@{/}"><span class="fzx-footer-link-icon">🏠</span>首页</a></li>
+            <li><a class="fzx-footer-link" th:href="@{/archives}"><span class="fzx-footer-link-icon">🗂️</span>归档</a></li>
+            <li><a class="fzx-footer-link" th:href="@{/categories}"><span class="fzx-footer-link-icon">📂</span>分类</a></li>
+            <li><a class="fzx-footer-link" th:href="@{/tags}"><span class="fzx-footer-link-icon">🔖</span>标签</a></li>
+          </th:block>
         </ul>
       </div>
 
       <!-- Extra links -->
       <div>
-        <div class="fzx-footer-col-title">更多</div>
+        <div class="fzx-footer-col-title" th:text="${footerMoreTitle}">更多</div>
         <ul class="fzx-footer-links">
-          <li><a href="/login" sec:authorize="isAnonymous()">登录</a></li>
-          <li><a href="/console" sec:authorize="isAuthenticated()" target="_blank">控制台</a></li>
-          <li><a href="https://halo.run" target="_blank" rel="noopener">Halo</a></li>
-          <li><a href="https://github.com/x1-explore/halo-fzx" target="_blank" rel="noopener">主题源码</a></li>
+          <th:block th:if="${!#lists.isEmpty(footerMoreLinks)}">
+            <li th:each="item : ${footerMoreLinks}"
+                th:with="rawUrl = ${item.url != null ? item.url : '/'},
+                         lower = ${#strings.toLowerCase(rawUrl)},
+                         safeUrl = ${lower.startsWith('http://') or lower.startsWith('https://') or lower.startsWith('/') or lower.startsWith('mailto:') ? rawUrl : '/'}">
+              <a class="fzx-footer-link"
+                 th:href="${safeUrl}"
+                 th:attr="rel=${safeUrl != null and #strings.startsWith(#strings.toLowerCase(safeUrl), 'http') ? 'noopener' : null}">
+                <span class="fzx-footer-link-icon" th:if="${!#strings.isEmpty(item.icon)}" th:text="${item.icon}">★</span>
+                <span th:text="${item.label}">链接</span>
+              </a>
+            </li>
+          </th:block>
+          <th:block th:unless="${!#lists.isEmpty(footerMoreLinks)}">
+            <li><a class="fzx-footer-link" href="/login" sec:authorize="isAnonymous()"><span class="fzx-footer-link-icon">→</span>登录</a></li>
+            <li><a class="fzx-footer-link" href="/console" sec:authorize="isAuthenticated()" target="_blank" rel="noopener"><span class="fzx-footer-link-icon">⚙️</span>控制台</a></li>
+            <li><a class="fzx-footer-link" href="https://halo.run" target="_blank" rel="noopener"><span class="fzx-footer-link-icon">✦</span>Halo</a></li>
+            <li><a class="fzx-footer-link" href="https://github.com/x1-explore/halo-fzx" target="_blank" rel="noopener"><span class="fzx-footer-link-icon">★</span>主题源码</a></li>
+          </th:block>
         </ul>
       </div>
 

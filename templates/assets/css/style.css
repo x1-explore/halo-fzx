@@ -148,6 +148,11 @@ body {
   pointer-events: none;
 }
 
+:root[data-theme="light"] #fzx-starfield {
+  opacity: 0.58;
+  mix-blend-mode: multiply;
+}
+
 /* === Reading Progress === */
 #fzx-reading-progress {
   position: fixed;
@@ -178,11 +183,24 @@ body {
   padding: 1.5rem 0 3rem;
 }
 
+.fzx-main-grid--single {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.fzx-main-grid--single .fzx-sidebar { display: none; }
+
+.fzx-main-grid--single .fzx-content-col {
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+}
+
 @media (min-width: 1024px) {
   .fzx-main-grid {
     grid-template-columns: 1fr var(--sidebar-width);
   }
 }
+
 
 /* === Header === */
 .fzx-header {
@@ -364,6 +382,15 @@ body {
   font-size: 0.9rem;
   box-shadow: 0 6px 24px var(--primary-glow);
   transition: transform var(--t-fast), box-shadow var(--t-fast), background var(--t-fast);
+}
+
+.fzx-auth-btn--with-register {
+  box-shadow: 0 10px 32px var(--primary-glow);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+:root[data-theme="light"] .fzx-auth-btn--with-register {
+  border-color: rgba(99, 102, 241, 0.2);
 }
 
 .fzx-auth-btn:hover {
@@ -1803,6 +1830,9 @@ body {
   border-top: 1px solid rgba(148, 163, 184, 0.07);
   position: relative;
   padding: 3rem 0 1.5rem;
+  background:
+    radial-gradient(900px at 20% 0%, rgba(129, 140, 248, 0.08), transparent 55%),
+    radial-gradient(700px at 85% 10%, rgba(244, 114, 182, 0.08), transparent 60%);
 }
 
 .fzx-footer::before {
@@ -1864,14 +1894,29 @@ body {
   gap: 0.5rem;
 }
 
-.fzx-footer-links a {
+.fzx-footer-link {
   color: var(--text-muted);
   text-decoration: none;
   font-size: 0.82rem;
-  transition: color var(--t-fast);
+  transition: color var(--t-fast), transform var(--t-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.1rem 0;
 }
 
-.fzx-footer-links a:hover { color: var(--primary-light); }
+.fzx-footer-link:hover {
+  color: var(--primary-light);
+  transform: translateX(2px);
+}
+
+.fzx-footer-link-icon {
+  width: 1.1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.85;
+}
 
 .fzx-footer-bottom {
   padding-top: 1.5rem;
