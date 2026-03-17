@@ -7,6 +7,26 @@
   <!-- Favicon -->
   <link th:unless="${#strings.isEmpty(site.favicon)}" rel="icon" th:href="${site.favicon}" />
 
+  <!-- 初始配色，优先使用本地偏好 → 主题设置 → 系统偏好，避免闪烁 -->
+  <script th:inline="javascript">
+    (function () {
+      try {
+        const storageKey = 'fzx-color-scheme';
+        const saved = localStorage.getItem(storageKey);
+        const setting = /*[[${theme.config.appearance.color_scheme}]]*/ 'dark';
+        const normalized = (!setting || setting === 'null') ? 'dark' : setting;
+        const systemPrefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+        const fallback = normalized === 'system' ? (systemPrefersLight ? 'light' : 'dark') : normalized;
+        const mode = saved === 'light' || saved === 'dark' ? saved : fallback;
+        const doc = document.documentElement;
+        doc.setAttribute('data-theme', mode);
+        doc.dataset.defaultTheme = normalized;
+      } catch (err) {
+        console.error('Theme init error', err);
+      }
+    })();
+  </script>
+
   <!-- Preconnect for Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />

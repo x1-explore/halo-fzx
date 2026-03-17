@@ -58,3 +58,41 @@ spec:
           name: show_share
           label: 显示分享按钮
           value: false
+    - group: branding
+      label: 品牌与头像
+      formSchema:
+        - $formkit: text
+          name: site_title
+          label: 自定义站点名称（留空则使用站点标题）
+          value: ""
+          help: 用于导航栏、页脚等位置
+        - $formkit: text
+          name: site_subtitle
+          label: 自定义站点副标题（留空则使用站点副标题）
+          value: ""
+        - $formkit: text
+          name: logo_url
+          label: 自定义 Logo 地址（留空使用站点 Logo）
+          value: ""
+        - $formkit: text
+          name: avatar_url
+          label: 自定义头像地址（留空使用站点 Logo 或默认图标）
+          value: ""
+    - group: appearance
+      label: 外观
+      formSchema:
+        - $formkit: select
+          name: color_scheme
+          label: 默认配色
+          value: "dark"
+          options:
+            - label: 暗色
+              value: "dark"
+            - label: 亮色
+              value: "light"
+            - label: 跟随系统
+              value: "system"
+        - $formkit: checkbox
+          name: show_theme_toggle
+          label: 显示主题切换按钮
+          value: true

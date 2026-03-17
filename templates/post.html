@@ -2,7 +2,7 @@
 <html
   xmlns:th="https://www.thymeleaf.org"
   th:replace="~{modules/layout :: html(
-    title       = ${post.spec.title} + ' - ' + ${site.title},
+    title       = ${post.spec.title} + ' - ' + ${!#strings.isEmpty(theme.config.branding.site_title) ? theme.config.branding.site_title : site.title},
     hero        = ~{::hero},
     content     = ~{::content},
     head        = null,

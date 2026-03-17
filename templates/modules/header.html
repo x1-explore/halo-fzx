@@ -1,17 +1,20 @@
 <header class="fzx-header" th:fragment="header" xmlns:th="https://www.thymeleaf.org"
-        th:with="menu = ${menuFinder.getPrimary()}">
+        th:with="menu = ${menuFinder.getPrimary()},
+                 brandingTitle = ${!#strings.isEmpty(theme.config.branding.site_title) ? theme.config.branding.site_title : site.title},
+                 brandingSubtitle = ${!#strings.isEmpty(theme.config.branding.site_subtitle) ? theme.config.branding.site_subtitle : site.subtitle},
+                 brandingLogo = ${!#strings.isEmpty(theme.config.branding.logo_url) ? theme.config.branding.logo_url : site.logo}">
   <div class="fzx-container" style="width:100%">
     <div class="fzx-header-inner">
 
       <!-- ── Logo ── -->
-      <a class="fzx-logo" th:href="@{/}">
-        <img
-          th:if="${!#strings.isEmpty(site.logo)}"
-          th:src="${site.logo}"
+        <a class="fzx-logo" th:href="@{/}">
+          <img
+          th:if="${!#strings.isEmpty(brandingLogo)}"
+          th:src="${brandingLogo}"
           class="fzx-logo-img"
-          th:alt="${site.title}"
+          th:alt="${brandingTitle}"
         />
-        <span class="fzx-logo-text" th:text="${site.title}">FZX</span>
+        <span class="fzx-logo-text" th:text="${brandingTitle}">FZX</span>
       </a>
 
       <!-- ── Primary Navigation ── -->
@@ -51,6 +54,42 @@
 
       <!-- ── Actions ── -->
       <div class="fzx-header-actions">
+        <th:block th:if="${theme.config.appearance.show_theme_toggle != false}">
+          <button class="fzx-icon-btn fzx-theme-toggle" type="button" data-fzx-theme-toggle aria-label="切换主题">
+            <svg class="fzx-theme-icon fzx-theme-icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg class="fzx-theme-icon fzx-theme-icon--moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+        </th:block>
+
+        <a
+          sec:authorize="isAnonymous()"
+          class="fzx-auth-btn"
+          href="/login"
+          th:classappend="${site.allowRegistration} ? 'fzx-auth-btn--with-register' : ''"
+          aria-label="登录或注册"
+          title="登录 / 注册"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+            <polyline points="10 17 15 12 10 7"></polyline>
+            <line x1="15" y1="12" x2="3" y2="12"></line>
+          </svg>
+          <span class="fzx-auth-text">登录</span>
+          <span class="fzx-auth-badge" th:if="${site.allowRegistration}">可注册</span>
+        </a>
+
         <!-- Search toggle -->
         <button id="fzx-search-btn" class="fzx-icon-btn" aria-label="搜索">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
