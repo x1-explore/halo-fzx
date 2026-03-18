@@ -27,7 +27,7 @@
           注册失败，请检查输入信息
         </div>
 
-        <form class="fzx-login-form" th:action="@{/register}" method="post">
+        <form class="fzx-login-form" th:action="@{/signup}" method="post">
           <input th:if="${_csrf != null}" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
           <label class="fzx-login-label" for="signup-username">用户名</label>
@@ -151,9 +151,9 @@
           try {
             const headers = { 'Content-Type': 'application/json' };
             if (csrfHeader && csrfToken) headers[csrfHeader] = csrfToken;
-            const actionPath = form ? new URL(form.getAttribute('action') || '/register', window.location.origin).pathname : '/register';
-            const primaryUrl = actionPath === '/signup' ? '/signup/send-email-code' : '/register/send-email-code';
-            const fallbackUrl = actionPath === '/signup' ? '/register/send-email-code' : '/signup/send-email-code';
+            const actionPath = form ? new URL(form.getAttribute('action') || '/signup', window.location.origin).pathname : '/signup';
+            const primaryUrl = '/signup/send-email-code';
+            const fallbackUrl = '/register/send-email-code';
             let response = await fetch(primaryUrl, {
               method: 'POST',
               headers,

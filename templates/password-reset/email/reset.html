@@ -1,0 +1,94 @@
+<!doctype html>
+<html xmlns:th="https://www.thymeleaf.org">
+  <head>
+    <th:block th:replace="~{modules/base-head :: base-head(
+      title = ${'重置密码 - ' + (!#strings.isEmpty(theme.config.branding.site_title) ? theme.config.branding.site_title : site.title)}
+    )}" />
+  </head>
+  <body class="fzx-login-page">
+    <canvas id="fzx-starfield" aria-hidden="true"></canvas>
+
+    <div class="fzx-login-shell"
+         th:with="brandingTitle = ${!#strings.isEmpty(theme.config.branding.site_title) ? theme.config.branding.site_title : site.title},
+                  brandingSubtitle = ${!#strings.isEmpty(theme.config.branding.site_subtitle) ? theme.config.branding.site_subtitle : site.subtitle},
+                  brandingLogo = ${!#strings.isEmpty(theme.config.branding.logo_url) ? theme.config.branding.logo_url : site.logo}">
+      <div class="fzx-login-card fzx-reveal">
+        <div class="fzx-login-brand">
+          <div class="fzx-login-avatar" th:if="${!#strings.isEmpty(brandingLogo)}">
+            <img th:src="${brandingLogo}" th:alt="${brandingTitle}" loading="lazy" />
+          </div>
+          <div class="fzx-login-title" th:text="${brandingTitle}">FZX 方舟星系</div>
+          <p class="fzx-login-subtitle">设置新密码</p>
+        </div>
+
+        <div class="fzx-login-alert fzx-login-alert--error" th:if="${param.error != null and !#lists.isEmpty(param.error)}">
+          密码重置失败，链接可能已失效，请重新申请
+        </div>
+
+        <form class="fzx-login-form" th:action="@{/password-reset/email/reset}" method="post">
+          <input th:if="${_csrf != null}" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+          <input type="hidden" name="token" th:value="${param.token != null and !#lists.isEmpty(param.token) ? param.token[0] : ''}" />
+
+          <label class="fzx-login-label" for="reset-password">新密码</label>
+          <div class="fzx-login-field">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <input id="reset-password" name="password" type="password" autocomplete="new-password" required minlength="6" placeholder="输入新密码（至少6位）" />
+          </div>
+
+          <label class="fzx-login-label" for="reset-confirm-password">确认新密码</label>
+          <div class="fzx-login-field">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <input id="reset-confirm-password" name="confirmPassword" type="password" autocomplete="new-password" required minlength="6" placeholder="再次输入新密码" />
+          </div>
+
+          <button class="fzx-btn fzx-btn-primary fzx-login-submit" type="submit">重置密码</button>
+        </form>
+
+        <div class="fzx-login-actions">
+          <a class="fzx-login-link" th:href="@{/login}">← 返回登录</a>
+          <a class="fzx-login-link" th:href="@{/}">← 返回首页</a>
+        </div>
+      </div>
+    </div>
+
+    <script th:if="${not #strings.isEmpty(publicKey)}" src="/webjars/jsencrypt/3.5.4/bin/jsencrypt.min.js" defer></script>
+    <script th:if="${not #strings.isEmpty(publicKey)}" th:inline="javascript">
+      document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('.fzx-login-form');
+        const passwordInput = document.getElementById('reset-password');
+        const confirmInput = document.getElementById('reset-confirm-password');
+        const key = /*[[${publicKey}]]*/ '';
+        if (!form) return;
+        form.addEventListener('submit', function (e) {
+          if (passwordInput && confirmInput && passwordInput.value !== confirmInput.value) {
+            e.preventDefault();
+            confirmInput.setCustomValidity('两次输入的密码不一致');
+            confirmInput.reportValidity();
+            return;
+          }
+          if (confirmInput) confirmInput.setCustomValidity('');
+          if (window.JSEncrypt && key && passwordInput && confirmInput) {
+            const encryptor = new JSEncrypt();
+            encryptor.setPublicKey(key);
+            const encryptedPassword = encryptor.encrypt(passwordInput.value);
+            const encryptedConfirm = encryptor.encrypt(confirmInput.value);
+            if (!encryptedPassword || !encryptedConfirm) {
+              e.preventDefault();
+              console.error('FZX password reset encryption failed');
+              window.alert('密码加密失败，请刷新页面后重试');
+              return;
+            }
+            passwordInput.value = encryptedPassword;
+            confirmInput.value = encryptedConfirm;
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

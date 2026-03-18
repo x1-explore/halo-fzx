@@ -1,0 +1,53 @@
+<!doctype html>
+<html xmlns:th="https://www.thymeleaf.org">
+  <head>
+    <th:block th:replace="~{modules/base-head :: base-head(
+      title = ${'找回密码 - ' + (!#strings.isEmpty(theme.config.branding.site_title) ? theme.config.branding.site_title : site.title)}
+    )}" />
+  </head>
+  <body class="fzx-login-page">
+    <canvas id="fzx-starfield" aria-hidden="true"></canvas>
+
+    <div class="fzx-login-shell"
+         th:with="brandingTitle = ${!#strings.isEmpty(theme.config.branding.site_title) ? theme.config.branding.site_title : site.title},
+                  brandingSubtitle = ${!#strings.isEmpty(theme.config.branding.site_subtitle) ? theme.config.branding.site_subtitle : site.subtitle},
+                  brandingLogo = ${!#strings.isEmpty(theme.config.branding.logo_url) ? theme.config.branding.logo_url : site.logo}">
+      <div class="fzx-login-card fzx-reveal">
+        <div class="fzx-login-brand">
+          <div class="fzx-login-avatar" th:if="${!#strings.isEmpty(brandingLogo)}">
+            <img th:src="${brandingLogo}" th:alt="${brandingTitle}" loading="lazy" />
+          </div>
+          <div class="fzx-login-title" th:text="${brandingTitle}">FZX 方舟星系</div>
+          <p class="fzx-login-subtitle">找回你的账号密码</p>
+        </div>
+
+        <div class="fzx-login-alert fzx-login-alert--error" th:if="${param.error != null and !#lists.isEmpty(param.error)}">
+          邮件发送失败，请检查邮箱地址是否正确
+        </div>
+        <div class="fzx-login-alert fzx-login-alert--info" th:if="${param.success != null and !#lists.isEmpty(param.success)}">
+          重置邮件已发送，请查收邮箱
+        </div>
+
+        <form class="fzx-login-form" th:action="@{/password-reset/email/send}" method="post">
+          <input th:if="${_csrf != null}" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+          <label class="fzx-login-label" for="reset-email">账号邮箱</label>
+          <div class="fzx-login-field">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+            <input id="reset-email" name="email" type="email" autocomplete="email" required placeholder="输入注册时使用的邮箱" />
+          </div>
+
+          <button class="fzx-btn fzx-btn-primary fzx-login-submit" type="submit">发送重置邮件</button>
+        </form>
+
+        <div class="fzx-login-actions">
+          <a class="fzx-login-link" th:href="@{/login}">← 返回登录</a>
+          <a class="fzx-login-link" th:href="@{/}">← 返回首页</a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
