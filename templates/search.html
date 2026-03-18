@@ -11,43 +11,38 @@
     contentClass= null
   )}"
 >
-  <th:block th:fragment="content">
+  <th:block
+    th:fragment="content"
+    th:with="normalizedKeyword = ${#strings.trim(keyword != null ? keyword : '')},
+             keywordLower = ${#strings.toLowerCase(normalizedKeyword)},
+             postPage = ${postFinder.list(1, 1000)},
+             allPosts = ${postPage != null ? postPage.items : {}},
+             matchedPosts = ${#strings.isEmpty(keywordLower) ? allPosts : allPosts.?[#strings.contains(#strings.toLowerCase(spec.title), keywordLower)]},
+             matchCount = ${#lists.size(matchedPosts)}"
+  >
 
     <div class="fzx-page-hero">
       <h1 class="fzx-page-hero-title">搜索结果</h1>
       <p class="fzx-page-hero-desc">
-        关键词：<span class="fzx-search-keyword" th:text="${keyword}">...</span>
+        关键词：<span class="fzx-search-keyword" th:text="${normalizedKeyword}">...</span>
         &nbsp;·&nbsp;
-        共 <span th:text="${posts.total}">0</span> 篇文章
+        共 <span th:text="${matchCount}">0</span> 篇文章
       </p>
     </div>
 
-    <div class="fzx-post-grid" th:if="${posts.total gt 0}">
-      <th:block th:each="post : ${posts.items}">
+    <div class="fzx-post-grid" th:if="${matchCount gt 0}">
+      <th:block th:each="post : ${matchedPosts}">
         <th:block th:replace="~{modules/post-card :: post-card(${post})}" />
       </th:block>
     </div>
 
-    <div class="fzx-empty" th:if="${posts.total == 0}">
+    <div class="fzx-empty" th:if="${matchCount == 0}">
       <div class="fzx-empty-icon">🔭</div>
-      <p>未找到与 "<span th:text="${keyword}">...</span>" 相关的文章</p>
+      <p>未找到与 "<span th:text="${normalizedKeyword}">...</span>" 相关的文章</p>
       <a class="fzx-btn fzx-btn-ghost" th:href="@{/}" style="margin-top:1.5rem">
         返回首页
       </a>
     </div>
-
-    <th:block
-      th:if="${posts.hasPrevious() or posts.hasNext()}"
-      th:replace="~{modules/pagination :: pagination(
-        context     = '/search?keyword=' + ${keyword} + '&',
-        prevUrl     = ${posts.prevUrl},
-        nextUrl     = ${posts.nextUrl},
-        totalPages  = ${posts.totalPages},
-        page        = ${posts.page},
-        hasPrevious = ${posts.hasPrevious()},
-        hasNext     = ${posts.hasNext()}
-      )}"
-    />
 
   </th:block>
 </html>
