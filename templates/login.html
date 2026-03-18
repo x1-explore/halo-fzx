@@ -24,13 +24,13 @@
           </p>
         </div>
 
-        <div class="fzx-login-alert fzx-login-alert--error" th:if="${param.containsKey('error')}">
+        <div class="fzx-login-alert fzx-login-alert--error" th:if="${param.error != null and !#lists.isEmpty(param.error)}">
           登录失败，请检查账号或密码
         </div>
-        <div class="fzx-login-alert fzx-login-alert--info" th:if="${param.containsKey('logout') and !param.containsKey('error')}">
+        <div class="fzx-login-alert fzx-login-alert--info" th:if="${param.logout != null and !#lists.isEmpty(param.logout) and (param.error == null or #lists.isEmpty(param.error))}">
           已安全退出登录
         </div>
-        <div class="fzx-login-alert fzx-login-alert--info" th:if="${(param.containsKey('signup') or param.containsKey('registered')) and !param.containsKey('error')}">
+        <div class="fzx-login-alert fzx-login-alert--info" th:if="${((param.signup != null and !#lists.isEmpty(param.signup)) or (param.registered != null and !#lists.isEmpty(param.registered))) and (param.error == null or #lists.isEmpty(param.error))}">
           注册成功，请登录
         </div>
 
