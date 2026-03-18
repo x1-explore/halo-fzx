@@ -81,12 +81,18 @@
         const passwordInput = document.getElementById('login-password');
         const key = /*[[${publicKey}]]*/ '';
         if (!form || !passwordInput || !key) return;
-        form.addEventListener('submit', function () {
+        form.addEventListener('submit', function (e) {
           if (!window.JSEncrypt || !passwordInput.value) return;
           const encryptor = new JSEncrypt();
           encryptor.setPublicKey(key);
           const encrypted = encryptor.encrypt(passwordInput.value);
-          if (encrypted) passwordInput.value = encrypted;
+          if (!encrypted) {
+            e.preventDefault();
+            console.error('FZX login encryption failed');
+            window.alert('密码加密失败，请刷新页面后重试');
+            return;
+          }
+          passwordInput.value = encrypted;
         });
       });
     </script>
