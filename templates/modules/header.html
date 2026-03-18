@@ -73,23 +73,6 @@
           </button>
         </th:block>
 
-        <a
-          sec:authorize="isAnonymous()"
-          class="fzx-auth-btn"
-          href="/login"
-          th:classappend="${site.allowRegistration} ? 'fzx-auth-btn--with-register' : ''"
-          th:title="${site.allowRegistration} ? '登录 / 注册' : '登录'"
-          aria-label="登录或注册"
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
-            <polyline points="10 17 15 12 10 7"></polyline>
-            <line x1="15" y1="12" x2="3" y2="12"></line>
-          </svg>
-          <span class="fzx-auth-text" th:text="${site.allowRegistration} ? '登录 / 注册' : '登录'">登录</span>
-          <span class="fzx-auth-badge" th:if="${site.allowRegistration}">可注册</span>
-        </a>
-
         <!-- Search toggle -->
         <button id="fzx-search-btn" class="fzx-icon-btn" aria-label="搜索">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -97,6 +80,20 @@
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
         </button>
+
+        <a
+          sec:authorize="isAnonymous()"
+          class="fzx-icon-btn"
+          href="/login"
+          th:title="${site.allowRegistration} ? '登录 / 注册' : '登录'"
+          th:attr="aria-label=${site.allowRegistration} ? '登录或注册' : '登录'"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+            <polyline points="10 17 15 12 10 7"></polyline>
+            <line x1="15" y1="12" x2="3" y2="12"></line>
+          </svg>
+        </a>
 
         <!-- Login/Console for authenticated users -->
         <a

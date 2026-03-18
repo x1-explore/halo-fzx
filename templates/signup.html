@@ -1,0 +1,58 @@
+<!doctype html>
+<html xmlns:th="https://www.thymeleaf.org">
+  <head>
+    <th:block th:replace="~{modules/base-head :: base-head(
+      title = ${'注册 - ' + (!#strings.isEmpty(theme.config.branding.site_title) ? theme.config.branding.site_title : site.title)}
+    )}" />
+  </head>
+  <body class="fzx-login-page">
+    <canvas id="fzx-starfield" aria-hidden="true"></canvas>
+
+    <div class="fzx-login-shell"
+         th:with="brandingTitle = ${!#strings.isEmpty(theme.config.branding.site_title) ? theme.config.branding.site_title : site.title},
+                  brandingSubtitle = ${!#strings.isEmpty(theme.config.branding.site_subtitle) ? theme.config.branding.site_subtitle : site.subtitle},
+                  brandingLogo = ${!#strings.isEmpty(theme.config.branding.logo_url) ? theme.config.branding.logo_url : site.logo}">
+      <div class="fzx-login-card fzx-reveal">
+        <div class="fzx-login-brand">
+          <div class="fzx-login-avatar" th:if="${!#strings.isEmpty(brandingLogo)}">
+            <img th:src="${brandingLogo}" th:alt="${brandingTitle}" loading="lazy" />
+          </div>
+          <div class="fzx-login-title" th:text="${brandingTitle}">FZX 方舟星系</div>
+          <p class="fzx-login-subtitle" th:text="${#strings.defaultString(brandingSubtitle, '欢迎来到星港')}">
+            欢迎来到星港
+          </p>
+        </div>
+
+        <div class="fzx-login-alert fzx-login-alert--error" th:if="${param.containsKey('error')}">
+          注册失败，请检查输入信息
+        </div>
+
+        <form class="fzx-login-form" th:action="@{/register}" method="post">
+          <input th:if="${_csrf != null}" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+          <label class="fzx-login-label" for="signup-username">用户名</label>
+          <div class="fzx-login-field">
+            <input id="signup-username" name="username" type="text" autocomplete="username" required placeholder="输入用户名" />
+          </div>
+
+          <label class="fzx-login-label" for="signup-email">邮箱</label>
+          <div class="fzx-login-field">
+            <input id="signup-email" name="email" type="email" autocomplete="email" required placeholder="输入邮箱" />
+          </div>
+
+          <label class="fzx-login-label" for="signup-password">密码</label>
+          <div class="fzx-login-field">
+            <input id="signup-password" name="password" type="password" autocomplete="new-password" required placeholder="输入密码" />
+          </div>
+
+          <button class="fzx-btn fzx-btn-primary fzx-login-submit" type="submit">注册</button>
+        </form>
+
+        <div class="fzx-login-actions">
+          <a class="fzx-login-link" th:href="@{/login}">← 返回登录</a>
+          <a class="fzx-login-link" th:href="@{/}">← 返回首页</a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

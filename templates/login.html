@@ -24,10 +24,10 @@
           </p>
         </div>
 
-        <div class="fzx-login-alert fzx-login-alert--error" th:if="${param.error}">
+        <div class="fzx-login-alert fzx-login-alert--error" th:if="${param.containsKey('error')}">
           登录失败，请检查账号或密码
         </div>
-        <div class="fzx-login-alert fzx-login-alert--info" th:if="${param.logout}">
+        <div class="fzx-login-alert fzx-login-alert--info" th:if="${param.containsKey('logout') and !param.containsKey('error')}">
           已安全退出登录
         </div>
 
@@ -57,10 +57,10 @@
               <input type="checkbox" name="remember-me" value="true" />
               记住我
             </label>
-            <a class="fzx-login-link" th:if="${site.allowRegistration}" th:href="@{/register}">注册新账户</a>
+            <a class="fzx-login-link" th:if="${site.allowRegistration}" th:href="@{/signup}">注册新账户</a>
           </div>
 
-          <button class="fzx-btn fzx-btn-primary fzx-login-submit" type="submit">进入星港</button>
+          <button class="fzx-btn fzx-btn-primary fzx-login-submit" type="submit">登录</button>
         </form>
 
         <div class="fzx-login-actions">
