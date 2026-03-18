@@ -15,15 +15,10 @@
     th:fragment="content"
     th:with="normalizedKeyword = ${#strings.trim(keyword != null ? keyword : '')},
              keywordLower = ${#strings.toLowerCase(normalizedKeyword)},
-             backendPosts = ${posts != null and posts.items != null ? posts.items : T(java.util.Collections).emptyList()},
-             backendTotal = ${posts != null and posts.total != null ? posts.total : #lists.size(backendPosts)},
-             useTitleFallback = ${#lists.size(backendPosts) == 0 and !#strings.isEmpty(keywordLower)},
-             fallbackLimit = ${100},
-             fallbackPage = ${useTitleFallback ? postFinder.list(1, fallbackLimit) : null},
-             fallbackPosts = ${fallbackPage != null and fallbackPage.items != null ? fallbackPage.items : T(java.util.Collections).emptyList()},
-             fallbackMatchedPosts = ${#strings.isEmpty(keywordLower) ? fallbackPosts : fallbackPosts.?[#strings.contains(#strings.toLowerCase(#this.spec.title), keywordLower)]},
-             renderedPosts = ${useTitleFallback ? fallbackMatchedPosts : backendPosts},
-             renderedTotal = ${useTitleFallback ? #lists.size(fallbackMatchedPosts) : backendTotal}"
+             allPostsPage = ${!#strings.isEmpty(keywordLower) ? postFinder.list(1, 500) : null},
+             allPosts = ${allPostsPage != null and allPostsPage.items != null ? allPostsPage.items : T(java.util.Collections).emptyList()},
+             renderedPosts = ${#strings.isEmpty(keywordLower) ? T(java.util.Collections).emptyList() : allPosts.?[#strings.contains(#strings.toLowerCase(#strings.defaultString(#this.spec.title, '')), keywordLower)]},
+             renderedTotal = ${#lists.size(renderedPosts)}"
   >
 
     <div class="fzx-page-hero">
@@ -48,19 +43,5 @@
         返回首页
       </a>
     </div>
-
-    <th:block
-      th:if="${!useTitleFallback and posts != null and (posts.hasPrevious() or posts.hasNext())}"
-      th:replace="~{modules/pagination :: pagination(
-        context     = '/search?keyword=' + ${normalizedKeyword} + '&',
-        prevUrl     = ${posts.prevUrl},
-        nextUrl     = ${posts.nextUrl},
-        totalPages  = ${posts.totalPages},
-        page        = ${posts.page},
-        hasPrevious = ${posts.hasPrevious()},
-        hasNext     = ${posts.hasNext()}
-      )}"
-    />
-
   </th:block>
 </html>

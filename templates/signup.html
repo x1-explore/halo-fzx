@@ -27,7 +27,7 @@
           注册失败，请检查输入信息
         </div>
 
-        <form class="fzx-login-form" th:action="@{/signup}" method="post">
+        <form class="fzx-login-form" th:action="@{/register}" method="post">
           <input th:if="${_csrf != null}" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
           <label class="fzx-login-label" for="signup-username">用户名</label>
@@ -97,6 +97,7 @@
       </div>
     </div>
 
+    <script th:if="${not #strings.isEmpty(publicKey)}" src="/webjars/jsencrypt/3.5.4/bin/jsencrypt.min.js" defer></script>
     <script th:inline="javascript">
       document.addEventListener('DOMContentLoaded', function () {
         const form = document.querySelector('.fzx-login-form');
@@ -104,6 +105,7 @@
         const displayNameInput = document.getElementById('signup-display-name');
         const passwordInput = document.getElementById('signup-password');
         const confirmInput = document.getElementById('signup-confirm-password');
+        const key = /*[[${publicKey}]]*/ '';
         if (form) {
           form.addEventListener('submit', function (e) {
             if (passwordInput && confirmInput && passwordInput.value !== confirmInput.value) {
@@ -115,6 +117,20 @@
             if (confirmInput) confirmInput.setCustomValidity('');
             if (usernameInput) usernameInput.value = usernameInput.value.trim();
             if (displayNameInput) displayNameInput.value = displayNameInput.value.trim();
+            if (window.JSEncrypt && key && passwordInput && confirmInput) {
+              const encryptor = new JSEncrypt();
+              encryptor.setPublicKey(key);
+              const encryptedPassword = encryptor.encrypt(passwordInput.value);
+              const encryptedConfirm = encryptor.encrypt(confirmInput.value);
+              if (!encryptedPassword || !encryptedConfirm) {
+                e.preventDefault();
+                console.error('FZX signup encryption failed');
+                window.alert('密码加密失败，请刷新页面后重试');
+                return;
+              }
+              passwordInput.value = encryptedPassword;
+              confirmInput.value = encryptedConfirm;
+            }
           });
         }
 
@@ -135,11 +151,21 @@
           try {
             const headers = { 'Content-Type': 'application/json' };
             if (csrfHeader && csrfToken) headers[csrfHeader] = csrfToken;
-            const response = await fetch('/signup/send-email-code', {
-              method: 'POST',
-              headers,
-              body: JSON.stringify({ email }),
-            });
+            const actionPath = form ? new URL(form.getAttribute('action') || '/register', window.location.origin).pathname : '/register';
+            const requestUrls = actionPath === '/signup'
+              ? ['/signup/send-email-code', '/register/send-email-code']
+              : ['/register/send-email-code', '/signup/send-email-code'];
+            let response = null;
+            for (const requestUrl of requestUrls) {
+              response = await fetch(requestUrl, {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({ email }),
+              });
+              if (response.ok || (response.status !== 404 && response.status !== 405)) {
+                break;
+              }
+            }
             if (!response.ok) {
               let message = '验证码发送失败，请稍后重试';
               try {
