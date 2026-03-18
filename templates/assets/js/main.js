@@ -648,11 +648,19 @@
       card.addEventListener('click', (e) => {
         // Let natural link clicks (category badges, tag links) work normally
         if (e.target.closest('a')) return;
-        if (e.ctrlKey || e.metaKey || e.shiftKey || e.button === 1) {
+        if (e.ctrlKey || e.metaKey || e.shiftKey) {
           window.open(href, '_blank', 'noopener');
           return;
         }
         window.location.assign(href);
+      });
+
+      // Middle-mouse click: open in new tab (auxclick fires reliably for button 1)
+      card.addEventListener('auxclick', (e) => {
+        if (e.button !== 1) return;
+        if (e.target.closest('a')) return;
+        e.preventDefault();
+        window.open(href, '_blank', 'noopener');
       });
 
       // Keyboard: activate on Enter or Space when the card itself is focused

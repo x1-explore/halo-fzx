@@ -76,6 +76,23 @@ spec:
           name: badge_text
           label: 横幅角标文案（留空则不显示）
           value: ""
+        - $formkit: select
+          name: badge_icon
+          label: 角标图标
+          value: "star"
+          options:
+            - label: 五角星（默认）
+              value: "star"
+            - label: 自定义图标 / Emoji
+              value: "custom"
+            - label: 不显示图标（纯文字）
+              value: "none"
+          help: 选择"自定义图标"时在下方填入 Emoji 或符号
+        - $formkit: text
+          name: badge_icon_custom
+          label: 自定义角标图标（Emoji 或文字，仅角标图标为"自定义"时生效）
+          value: ""
+          help: 例如填写 🚀 或 ✨
     - group: post
       label: 文章设置
       formSchema:
@@ -245,14 +262,14 @@ spec:
               label: 悬浮提示文字（如：联系我 / 我的 GitHub）
               value: ""
     - group: page
-      label: 单页
+      label: 单页（关于等页面）
       formSchema:
         - $formkit: checkbox
           name: center_layout
-          label: 单页内容居中显示
-          help: 开启后单页正文会居中且收窄宽度，同时隐藏侧边栏；关闭则与文章页一致
+          label: 单页内容居中显示（推荐开启，适合"关于"页等内容页）
+          help: 开启后，单页（关于页、自定义页等）正文卡片将居中显示、宽度收窄（760 px），同时隐藏侧边栏，区别于普通文章页的双栏布局；关闭则与文章页一致。
           value: true
         - $formkit: checkbox
           name: show_sidebar
-          label: 显示侧边栏
+          label: 显示侧边栏（仅"居中显示"关闭时生效）
           value: false
