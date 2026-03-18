@@ -2,6 +2,10 @@
   th:fragment="post-card(post)"
   class="fzx-post-card fzx-reveal"
   xmlns:th="https://www.thymeleaf.org"
+  th:data-href="${post.status.permalink}"
+  role="article"
+  tabindex="0"
+  th:attr="aria-label=${'阅读文章：' + post.spec.title}"
 >
   <div class="fzx-card-inner" th:classappend="${!#strings.isEmpty(post.spec.cover)} ? 'has-cover' : ''">
 

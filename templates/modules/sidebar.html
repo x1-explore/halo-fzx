@@ -61,12 +61,14 @@
       分类
     </h3>
     <ul class="fzx-cats-list">
-      <li class="fzx-cat-item" th:each="cat : ${cats}">
-        <a th:href="${cat.status.permalink}">
-          <span th:text="${cat.spec.displayName}">分类</span>
-          <span class="fzx-cat-count" th:text="${cat.status.postCount ?: 0}">0</span>
-        </a>
-      </li>
+      <th:block th:each="cat : ${cats}">
+        <li class="fzx-cat-item" th:if="${(cat.status.postCount ?: 0) gt 0}">
+          <a th:href="${cat.status.permalink}">
+            <span th:text="${cat.spec.displayName}">分类</span>
+            <span class="fzx-cat-count" th:text="${cat.status.postCount ?: 0}">0</span>
+          </a>
+        </li>
+      </th:block>
     </ul>
     <div th:if="${#lists.isEmpty(cats)}" style="color:var(--text-muted);font-size:0.82rem;padding:0.5rem 0">
       暂无分类
@@ -83,12 +85,14 @@
       标签云
     </h3>
     <div class="fzx-tag-cloud">
-      <a
-        class="fzx-tag-cloud-item"
-        th:each="tag : ${tags}"
-        th:href="${tag.status.permalink}"
-        th:text="'#' + ${tag.spec.displayName}"
-      >#标签</a>
+      <th:block th:each="tag : ${tags}">
+        <a
+          class="fzx-tag-cloud-item"
+          th:if="${(tag.status.postCount ?: 0) gt 0}"
+          th:href="${tag.status.permalink}"
+          th:text="'#' + ${tag.spec.displayName}"
+        >#标签</a>
+      </th:block>
     </div>
     <div th:if="${#lists.isEmpty(tags)}" style="color:var(--text-muted);font-size:0.82rem">
       暂无标签

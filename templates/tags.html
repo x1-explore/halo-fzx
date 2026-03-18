@@ -21,13 +21,15 @@
     <div th:with="tags = ${tagFinder.listAll()}">
 
       <div class="fzx-glass fzx-tags-page-cloud" th:unless="${#lists.isEmpty(tags)}">
-        <a
-          class="fzx-tag-page-pill"
-          th:each="tag : ${tags}"
-          th:href="${tag.status.permalink}"
-        >
-          #<span th:text="${tag.spec.displayName}">标签</span>
-        </a>
+        <th:block th:each="tag : ${tags}">
+          <a
+            class="fzx-tag-page-pill"
+            th:if="${(tag.status.postCount ?: 0) gt 0}"
+            th:href="${tag.status.permalink}"
+          >
+            #<span th:text="${tag.spec.displayName}">标签</span>
+          </a>
+        </th:block>
       </div>
 
       <div class="fzx-empty" th:if="${#lists.isEmpty(tags)}">

@@ -637,6 +637,35 @@
   }
 
   /* ============================================================
+     Post Card — full-area click navigation
+  ============================================================ */
+  function initCardNavigation() {
+    document.querySelectorAll('.fzx-post-card[data-href]').forEach((card) => {
+      const href = card.dataset.href;
+      if (!href) return;
+
+      // Mouse click: support modifier keys for open-in-new-tab
+      card.addEventListener('click', (e) => {
+        // Let natural link clicks (category badges, tag links) work normally
+        if (e.target.closest('a')) return;
+        if (e.ctrlKey || e.metaKey || e.shiftKey || e.button === 1) {
+          window.open(href, '_blank', 'noopener');
+          return;
+        }
+        window.location.assign(href);
+      });
+
+      // Keyboard: activate on Enter or Space when the card itself is focused
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          window.location.assign(href);
+        }
+      });
+    });
+  }
+
+  /* ============================================================
      Init
   ============================================================ */
   document.addEventListener('DOMContentLoaded', () => {
@@ -654,5 +683,6 @@
     initHeroParallax();
     initPaginationSelect();
     initUpvote();
+    initCardNavigation();
   });
 })();

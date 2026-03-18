@@ -10,10 +10,10 @@ spec:
         - $formkit: number
           name: post_count
           label: 首页每页文章数量（参考值）
-          value: 6
+          value: 10
           min: 1
           max: 30
-          help: 仅供参考。实际每页文章数量由 Halo 系统设置中"每页展示文章数量"控制，请在 Halo 管理后台 → 系统设置 → 文章 中同步修改为相同数字。
+          help: 仅供参考。实际每页文章数量由 Halo 系统设置中"每页展示文章数量"控制，请在 Halo 管理后台 → 系统设置 → 文章 中同步修改为相同数字（Halo 默认为 10）。
         - $formkit: select
           name: display_mode
           label: 展示模式
