@@ -152,19 +152,19 @@
             const headers = { 'Content-Type': 'application/json' };
             if (csrfHeader && csrfToken) headers[csrfHeader] = csrfToken;
             const actionPath = form ? new URL(form.getAttribute('action') || '/register', window.location.origin).pathname : '/register';
-            const requestUrls = actionPath === '/signup'
-              ? ['/signup/send-email-code', '/register/send-email-code']
-              : ['/register/send-email-code', '/signup/send-email-code'];
-            let response = null;
-            for (const requestUrl of requestUrls) {
-              response = await fetch(requestUrl, {
+            const primaryUrl = actionPath === '/signup' ? '/signup/send-email-code' : '/register/send-email-code';
+            const fallbackUrl = actionPath === '/signup' ? '/register/send-email-code' : '/signup/send-email-code';
+            let response = await fetch(primaryUrl, {
+              method: 'POST',
+              headers,
+              body: JSON.stringify({ email }),
+            });
+            if (!response.ok && (response.status === 404 || response.status === 405)) {
+              response = await fetch(fallbackUrl, {
                 method: 'POST',
                 headers,
                 body: JSON.stringify({ email }),
               });
-              if (response.ok || (response.status !== 404 && response.status !== 405)) {
-                break;
-              }
             }
             if (!response.ok) {
               let message = '验证码发送失败，请稍后重试';

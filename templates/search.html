@@ -15,7 +15,7 @@
     th:fragment="content"
     th:with="normalizedKeyword = ${#strings.trim(keyword != null ? keyword : '')},
              keywordLower = ${#strings.toLowerCase(normalizedKeyword)},
-             allPostsPage = ${!#strings.isEmpty(keywordLower) ? postFinder.list(1, 500) : null},
+             allPostsPage = ${!#strings.isEmpty(keywordLower) ? postFinder.list(1, 200) : null},
              allPosts = ${allPostsPage != null and allPostsPage.items != null ? allPostsPage.items : T(java.util.Collections).emptyList()},
              renderedPosts = ${#strings.isEmpty(keywordLower) ? T(java.util.Collections).emptyList() : allPosts.?[#strings.contains(#strings.toLowerCase(#strings.defaultString(#this.spec.title, '')), keywordLower)]},
              renderedTotal = ${#lists.size(renderedPosts)}"
