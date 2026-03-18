@@ -1,7 +1,7 @@
 <!doctype html>
 <html
     xmlns:th="https://www.thymeleaf.org"
-    th:replace="~{gateway_fragments/layout:: layout(title = ${(#messages.msgOrNull('title') ?: '找回密码') + ' - ' + site.title}, head = null, body = ~{::body})}"
+    th:replace="~{gateway_fragments/layout:: layout(title = ${#messages.msgOrNull('title') ?: '找回密码'}, head = null, body = ~{::body})}"
 >
     <th:block th:fragment="body">
         <div class="gateway-wrapper">
