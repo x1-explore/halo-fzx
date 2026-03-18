@@ -39,6 +39,15 @@
             <input id="signup-username" name="username" type="text" autocomplete="username" required pattern="[a-zA-Z0-9_-]+" title="只允许字母、数字、下划线和连字符" placeholder="输入用户名（字母或数字）" />
           </div>
 
+          <label class="fzx-login-label" for="signup-display-name">显示名称</label>
+          <div class="fzx-login-field">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <input id="signup-display-name" name="displayName" type="text" autocomplete="nickname" required placeholder="输入显示名称" />
+          </div>
+
           <label class="fzx-login-label" for="signup-email">邮箱</label>
           <div class="fzx-login-field">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -92,6 +101,7 @@
       document.addEventListener('DOMContentLoaded', function () {
         const form = document.querySelector('.fzx-login-form');
         const usernameInput = document.getElementById('signup-username');
+        const displayNameInput = document.getElementById('signup-display-name');
         const passwordInput = document.getElementById('signup-password');
         const confirmInput = document.getElementById('signup-confirm-password');
         if (form) {
@@ -104,6 +114,7 @@
             }
             if (confirmInput) confirmInput.setCustomValidity('');
             if (usernameInput) usernameInput.value = usernameInput.value.trim();
+            if (displayNameInput) displayNameInput.value = displayNameInput.value.trim();
           });
         }
 
