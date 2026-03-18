@@ -17,7 +17,7 @@
             th:with="brandingTitle = ${!#strings.isEmpty(theme.config.branding.site_title) ? theme.config.branding.site_title : site.title},
                        brandingSubtitle = ${!#strings.isEmpty(theme.config.branding.site_subtitle) ? theme.config.branding.site_subtitle : site.subtitle},
                        badgeIcon = ${theme.config.hero.badge_icon}">
-    <section class="fzx-hero">
+    <section class="fzx-hero" th:if="${posts == null or posts.page == null or posts.page == 1}">
       <div class="fzx-hero-content">
         <div class="fzx-hero-eyebrow" th:if="${!#strings.isEmpty(theme.config.hero.badge_text)}">
           <!-- Star icon (default when badge_icon is null/empty/star) -->

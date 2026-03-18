@@ -39,7 +39,7 @@
 
       <!-- Excerpt -->
       <p class="fzx-card-excerpt"
-         th:text="${!#strings.isEmpty(post.spec.excerpt) ? post.spec.excerpt : post.status.excerpt}">
+         th:text="${post.status.excerpt}">
         文章摘要
       </p>
 
