@@ -659,7 +659,11 @@
       card.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          window.location.assign(href);
+          if (e.ctrlKey || e.metaKey) {
+            window.open(href, '_blank', 'noopener');
+          } else {
+            window.location.assign(href);
+          }
         }
       });
     });

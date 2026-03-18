@@ -1027,24 +1027,16 @@ body {
 }
 
 .fzx-widget {
-  background: var(--glass-bg);
+  background:
+    linear-gradient(var(--glass-bg), var(--glass-bg)) padding-box,
+    var(--grad-primary) border-box;
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border);
+  border: 2px solid transparent;
   border-radius: var(--radius-lg);
   padding: 1.25rem;
   position: relative;
   overflow: hidden;
-}
-
-.fzx-widget::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--grad-primary);
 }
 
 .fzx-widget-title {
@@ -1092,6 +1084,52 @@ body {
   color: var(--text-secondary);
   font-size: 0.82rem;
   line-height: 1.6;
+}
+
+/* Profile Social Links */
+.fzx-profile-social {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.875rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.fzx-social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: rgba(129, 140, 248, 0.1);
+  border: 1px solid rgba(129, 140, 248, 0.2);
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all var(--t-fast);
+  flex-shrink: 0;
+}
+
+.fzx-social-link svg { width: 14px; height: 14px; }
+
+.fzx-social-link:hover {
+  background: var(--primary-glow);
+  border-color: var(--primary);
+  color: var(--primary-light);
+  box-shadow: 0 0 12px var(--primary-glow);
+  transform: translateY(-2px);
+}
+
+:root[data-theme="light"] .fzx-social-link {
+  background: rgba(99, 102, 241, 0.08);
+  border-color: rgba(99, 102, 241, 0.18);
+}
+
+:root[data-theme="light"] .fzx-social-link:hover {
+  background: rgba(99, 102, 241, 0.14);
+  box-shadow: 0 0 12px var(--primary-glow);
 }
 
 /* Recent Posts Widget */
