@@ -199,6 +199,7 @@ body {
 .fzx-main-grid--single .fzx-sidebar { display: none; }
 
 .fzx-main-grid--single .fzx-content-col {
+  /* 760px matches the focused reading width set in theme settings (page.center_layout) */
   max-width: 760px;
   margin: 0 auto;
   width: 100%;
@@ -1678,16 +1679,6 @@ body {
   border-color: var(--pink);
   color: var(--pink);
   background: rgba(244, 114, 182, 0.08);
-}
-
-.fzx-reaction-btn--active {
-  border-color: var(--pink);
-  color: var(--pink);
-  background: rgba(244, 114, 182, 0.12);
-}
-
-.fzx-reaction-btn--active:hover {
-  cursor: default;
 }
 
 .fzx-reaction-btn svg { width: 15px; height: 15px; }

@@ -101,10 +101,6 @@ spec:
           label: 显示目录
           value: true
         - $formkit: checkbox
-          name: show_upvote
-          label: 显示点赞按钮
-          value: true
-        - $formkit: checkbox
           name: show_share
           label: 显示分享按钮
           value: false

@@ -385,6 +385,22 @@
       if (e.target === overlay) close();
     });
 
+    // Submit on Enter; input inside form guarantees correct keyword param
+    if (input) {
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const form = input.closest('form');
+          if (!form) return;
+          if (form.requestSubmit) {
+            form.requestSubmit();
+          } else if (form.checkValidity()) {
+            form.submit();
+          }
+        }
+      });
+    }
+
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') close();
       if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
@@ -586,57 +602,6 @@
   }
 
   /* ============================================================
-     Post Upvote Button
-  ============================================================ */
-  function initUpvote() {
-    const btn = document.getElementById('fzx-upvote-btn');
-    const countEl = document.getElementById('fzx-upvote-count');
-    if (!btn || !countEl) return;
-
-    const postName = btn.dataset.postName;
-    if (!postName) return;
-
-    const storageKey = `fzx-upvoted-${postName}`;
-    const hasVoted = () => {
-      try { return localStorage.getItem(storageKey) === '1'; } catch { return false; }
-    };
-    const markVoted = () => {
-      try { localStorage.setItem(storageKey, '1'); } catch {}
-    };
-
-    if (hasVoted()) {
-      btn.classList.add('fzx-reaction-btn--active');
-      btn.title = '已点赞';
-    }
-
-    btn.addEventListener('click', async () => {
-      if (hasVoted()) return;
-
-      btn.disabled = true;
-      btn.classList.add('fzx-reaction-btn--active');
-      try {
-        const res = await fetch(
-          `/apis/api.halo.run/v1alpha1/posts/${encodeURIComponent(postName)}/upvote`,
-          { method: 'POST', headers: { 'Content-Type': 'application/json' } }
-        );
-        if (res.ok) {
-          const current = parseInt(countEl.textContent, 10) || 0;
-          countEl.textContent = current + 1;
-          btn.title = '已点赞';
-          markVoted();
-        } else {
-          btn.classList.remove('fzx-reaction-btn--active');
-        }
-      } catch (err) {
-        console.warn('Upvote failed', err);
-        btn.classList.remove('fzx-reaction-btn--active');
-      } finally {
-        btn.disabled = false;
-      }
-    });
-  }
-
-  /* ============================================================
      Post Card — full-area click navigation
   ============================================================ */
   function initCardNavigation() {
@@ -694,7 +659,6 @@
     initLightbox();
     initHeroParallax();
     initPaginationSelect();
-    initUpvote();
     initCardNavigation();
   });
 })();
