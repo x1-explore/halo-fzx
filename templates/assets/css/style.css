@@ -252,6 +252,10 @@ body {
   width: 100%;
 }
 
+.fzx-header-inner > nav {
+  margin: 0 auto;
+}
+
 /* Logo */
 .fzx-logo {
   display: flex;
@@ -382,7 +386,7 @@ body {
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  margin-left: auto;
+  margin-left: 0;
 }
 
 .fzx-theme-toggle {
