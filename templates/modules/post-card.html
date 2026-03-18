@@ -34,7 +34,7 @@
 
       <!-- Title -->
       <h2 class="fzx-card-title">
-        <span th:text="${post.spec.title}">文章标题</span>
+        <a th:href="${post.status.permalink}" th:text="${post.spec.title}">文章标题</a>
       </h2>
 
       <!-- Excerpt -->

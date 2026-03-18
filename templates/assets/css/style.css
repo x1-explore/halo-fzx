@@ -275,6 +275,7 @@ body {
   justify-content: center;
   padding: 2px;
   border-radius: 50%;
+  overflow: hidden;
   background: var(--grad-primary);
 }
 
@@ -1055,6 +1056,8 @@ body {
   background:
     linear-gradient(var(--glass-bg), var(--glass-bg)) padding-box,
     var(--widget-border-gradient) border-box;
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
   border: 2px solid transparent;
@@ -1138,8 +1141,8 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1.25rem;
+  height: 1.25rem;
   border-radius: 50%;
   background: rgba(129, 140, 248, 0.1);
   border: 1px solid rgba(129, 140, 248, 0.2);
@@ -1149,7 +1152,7 @@ body {
   flex-shrink: 0;
 }
 
-.fzx-social-link svg { width: 12px; height: 12px; }
+.fzx-social-link svg { width: 10px; height: 10px; }
 
 .fzx-social-link:hover {
   background: var(--primary-glow);
