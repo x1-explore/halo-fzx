@@ -15,10 +15,14 @@
     th:fragment="content"
     th:with="normalizedKeyword = ${#strings.trim(keyword != null ? keyword : '')},
              keywordLower = ${#strings.toLowerCase(normalizedKeyword)},
-             postPage = ${postFinder.list(1, 1000)},
-             allPosts = ${postPage != null ? postPage.items : {}},
-             matchedPosts = ${#strings.isEmpty(keywordLower) ? allPosts : allPosts.?[#strings.contains(#strings.toLowerCase(spec.title), keywordLower)]},
-             matchCount = ${#lists.size(matchedPosts)}"
+             backendPosts = ${posts != null and posts.items != null ? posts.items : {}},
+             backendTotal = ${posts != null ? posts.total : 0},
+             useTitleFallback = ${backendTotal == 0 and !#strings.isEmpty(keywordLower)},
+             fallbackPage = ${useTitleFallback ? postFinder.list(1, 200) : null},
+             fallbackPosts = ${fallbackPage != null and fallbackPage.items != null ? fallbackPage.items : {}},
+             fallbackMatchedPosts = ${#strings.isEmpty(keywordLower) ? fallbackPosts : fallbackPosts.?[#strings.contains(#strings.toLowerCase(spec.title), keywordLower)]},
+             renderedPosts = ${useTitleFallback ? fallbackMatchedPosts : backendPosts},
+             renderedTotal = ${useTitleFallback ? #lists.size(fallbackMatchedPosts) : backendTotal}"
   >
 
     <div class="fzx-page-hero">
@@ -26,23 +30,36 @@
       <p class="fzx-page-hero-desc">
         关键词：<span class="fzx-search-keyword" th:text="${normalizedKeyword}">...</span>
         &nbsp;·&nbsp;
-        共 <span th:text="${matchCount}">0</span> 篇文章
+        共 <span th:text="${renderedTotal}">0</span> 篇文章
       </p>
     </div>
 
-    <div class="fzx-post-grid" th:if="${matchCount gt 0}">
-      <th:block th:each="post : ${matchedPosts}">
+    <div class="fzx-post-grid" th:if="${renderedTotal gt 0}">
+      <th:block th:each="post : ${renderedPosts}">
         <th:block th:replace="~{modules/post-card :: post-card(${post})}" />
       </th:block>
     </div>
 
-    <div class="fzx-empty" th:if="${matchCount == 0}">
+    <div class="fzx-empty" th:if="${renderedTotal == 0}">
       <div class="fzx-empty-icon">🔭</div>
       <p>未找到与 "<span th:text="${normalizedKeyword}">...</span>" 相关的文章</p>
       <a class="fzx-btn fzx-btn-ghost" th:href="@{/}" style="margin-top:1.5rem">
         返回首页
       </a>
     </div>
+
+    <th:block
+      th:if="${!useTitleFallback and posts != null and (posts.hasPrevious() or posts.hasNext())}"
+      th:replace="~{modules/pagination :: pagination(
+        context     = '/search?keyword=' + ${normalizedKeyword} + '&',
+        prevUrl     = ${posts.prevUrl},
+        nextUrl     = ${posts.nextUrl},
+        totalPages  = ${posts.totalPages},
+        page        = ${posts.page},
+        hasPrevious = ${posts.hasPrevious()},
+        hasNext     = ${posts.hasNext()}
+      )}"
+    />
 
   </th:block>
 </html>
