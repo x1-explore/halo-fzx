@@ -15,12 +15,12 @@
     th:fragment="content"
     th:with="normalizedKeyword = ${#strings.trim(keyword != null ? keyword : '')},
              keywordLower = ${#strings.toLowerCase(normalizedKeyword)},
-             backendPosts = ${posts != null and posts.items != null ? posts.items : {}},
-             backendTotal = ${posts != null ? posts.total : 0},
-             useTitleFallback = ${backendTotal == 0 and !#strings.isEmpty(keywordLower)},
+             backendPosts = ${posts != null and posts.items != null ? posts.items : T(java.util.Collections).emptyList()},
+             backendTotal = ${posts != null and posts.total != null ? posts.total : #lists.size(backendPosts)},
+             useTitleFallback = ${#lists.size(backendPosts) == 0 and !#strings.isEmpty(keywordLower)},
              fallbackLimit = ${100},
              fallbackPage = ${useTitleFallback ? postFinder.list(1, fallbackLimit) : null},
-             fallbackPosts = ${fallbackPage != null and fallbackPage.items != null ? fallbackPage.items : {}},
+             fallbackPosts = ${fallbackPage != null and fallbackPage.items != null ? fallbackPage.items : T(java.util.Collections).emptyList()},
              fallbackMatchedPosts = ${#strings.isEmpty(keywordLower) ? fallbackPosts : fallbackPosts.?[#strings.contains(#strings.toLowerCase(#this.spec.title), keywordLower)]},
              renderedPosts = ${useTitleFallback ? fallbackMatchedPosts : backendPosts},
              renderedTotal = ${useTitleFallback ? #lists.size(fallbackMatchedPosts) : backendTotal}"
