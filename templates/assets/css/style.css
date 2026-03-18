@@ -209,6 +209,10 @@ body {
   .fzx-main-grid {
     grid-template-columns: 1fr var(--sidebar-width);
   }
+
+  .fzx-main-grid.fzx-main-grid--single {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 
@@ -243,8 +247,8 @@ body {
 .fzx-header-inner {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+  justify-content: flex-start;
+  gap: 0.5rem;
   width: 100%;
 }
 
@@ -258,9 +262,20 @@ body {
 }
 
 .fzx-logo-img {
-  width: 2rem;
-  height: 2rem;
+  width: 1.75rem;
+  height: 1.75rem;
   border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+.fzx-logo-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  border-radius: 50%;
+  background: var(--grad-primary);
 }
 
 .fzx-logo-text {
@@ -361,6 +376,7 @@ body {
   display: flex;
   align-items: center;
   gap: 0.25rem;
+  margin-left: auto;
 }
 
 .fzx-theme-toggle {
@@ -1035,9 +1051,10 @@ body {
 }
 
 .fzx-widget {
+  --widget-border-gradient: var(--grad-primary);
   background:
     linear-gradient(var(--glass-bg), var(--glass-bg)) padding-box,
-    var(--grad-primary) border-box;
+    var(--widget-border-gradient) border-box;
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
   border: 2px solid transparent;
@@ -1045,6 +1062,18 @@ body {
   padding: 1.25rem;
   position: relative;
   overflow: hidden;
+}
+
+.fzx-sidebar > .fzx-widget:nth-child(2n) {
+  --widget-border-gradient: var(--grad-cyan-pink);
+}
+
+.fzx-sidebar > .fzx-widget:nth-child(3n) {
+  --widget-border-gradient: linear-gradient(135deg, #22d3ee 0%, #0ea5e9 100%);
+}
+
+.fzx-sidebar > .fzx-widget:nth-child(4n) {
+  --widget-border-gradient: linear-gradient(135deg, #f472b6 0%, #fb7185 100%);
 }
 
 .fzx-widget-title {
@@ -1109,8 +1138,8 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
+  width: 1.5rem;
+  height: 1.5rem;
   border-radius: 50%;
   background: rgba(129, 140, 248, 0.1);
   border: 1px solid rgba(129, 140, 248, 0.2);
@@ -1120,7 +1149,7 @@ body {
   flex-shrink: 0;
 }
 
-.fzx-social-link svg { width: 14px; height: 14px; }
+.fzx-social-link svg { width: 12px; height: 12px; }
 
 .fzx-social-link:hover {
   background: var(--primary-glow);
@@ -2251,7 +2280,7 @@ body {
 }
 
 .fzx-footer-link-icon {
-  width: 1.1rem;
+  width: 0.95rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -2260,8 +2289,8 @@ body {
 }
 
 .fzx-footer-link-icon svg {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
   stroke: currentColor;
 }
 
