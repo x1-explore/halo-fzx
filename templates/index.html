@@ -56,6 +56,12 @@
   <!-- ── Post list content ── -->
   <th:block th:fragment="content">
 
+    <!-- Optional section title -->
+    <div class="fzx-section-header fzx-reveal"
+         th:if="${!#strings.isEmpty(theme.config.homepage.section_title)}">
+      <h2 class="fzx-section-title" th:text="${theme.config.homepage.section_title}">最新文章</h2>
+    </div>
+
     <!-- Post grid -->
     <div class="fzx-post-grid" th:if="${posts.total gt 0}">
       <th:block th:each="post : ${posts.items}">

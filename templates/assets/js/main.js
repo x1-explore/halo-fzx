@@ -116,15 +116,26 @@
       ['rgba(244,114,182,{a})', 3],
     ];
 
-    const TOTAL_WEIGHT = STAR_COLORS.reduce((s, [, w]) => s + w, 0);
+    const STAR_COLORS_LIGHT = [
+      ['rgba(99,102,241,{a})', 40],
+      ['rgba(129,140,248,{a})', 30],
+      ['rgba(167,139,250,{a})', 14],
+      ['rgba(236,72,153,{a})',  8],
+      ['rgba(8,145,178,{a})',   5],
+      ['rgba(251,191,36,{a})',  3],
+    ];
+
+    const isLight = () => document.documentElement.getAttribute('data-theme') === 'light';
 
     function pickColor() {
-      let r = Math.random() * TOTAL_WEIGHT;
-      for (const [tpl, w] of STAR_COLORS) {
+      const palette = isLight() ? STAR_COLORS_LIGHT : STAR_COLORS;
+      const totalW = palette.reduce((s, [, w]) => s + w, 0);
+      let r = Math.random() * totalW;
+      for (const [tpl, w] of palette) {
         r -= w;
         if (r <= 0) return tpl;
       }
-      return STAR_COLORS[0][0];
+      return palette[0][0];
     }
 
     function createStars() {
@@ -575,6 +586,57 @@
   }
 
   /* ============================================================
+     Post Upvote Button
+  ============================================================ */
+  function initUpvote() {
+    const btn = document.getElementById('fzx-upvote-btn');
+    const countEl = document.getElementById('fzx-upvote-count');
+    if (!btn || !countEl) return;
+
+    const postName = btn.dataset.postName;
+    if (!postName) return;
+
+    const storageKey = `fzx-upvoted-${postName}`;
+    const hasVoted = () => {
+      try { return localStorage.getItem(storageKey) === '1'; } catch { return false; }
+    };
+    const markVoted = () => {
+      try { localStorage.setItem(storageKey, '1'); } catch {}
+    };
+
+    if (hasVoted()) {
+      btn.classList.add('fzx-reaction-btn--active');
+      btn.title = '已点赞';
+    }
+
+    btn.addEventListener('click', async () => {
+      if (hasVoted()) return;
+
+      btn.disabled = true;
+      btn.classList.add('fzx-reaction-btn--active');
+      try {
+        const res = await fetch(
+          `/apis/api.halo.run/v1alpha1/posts/${encodeURIComponent(postName)}/upvote`,
+          { method: 'POST', headers: { 'Content-Type': 'application/json' } }
+        );
+        if (res.ok) {
+          const current = parseInt(countEl.textContent, 10) || 0;
+          countEl.textContent = current + 1;
+          btn.title = '已点赞';
+          markVoted();
+        } else {
+          btn.classList.remove('fzx-reaction-btn--active');
+        }
+      } catch (err) {
+        console.warn('Upvote failed', err);
+        btn.classList.remove('fzx-reaction-btn--active');
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  }
+
+  /* ============================================================
      Init
   ============================================================ */
   document.addEventListener('DOMContentLoaded', () => {
@@ -591,5 +653,6 @@
     initLightbox();
     initHeroParallax();
     initPaginationSelect();
+    initUpvote();
   });
 })();
