@@ -15,13 +15,22 @@
   <!-- ── Full-screen hero for homepage ── -->
   <th:block th:fragment="hero"
             th:with="brandingTitle = ${!#strings.isEmpty(theme.config.branding.site_title) ? theme.config.branding.site_title : site.title},
-                       brandingSubtitle = ${!#strings.isEmpty(theme.config.branding.site_subtitle) ? theme.config.branding.site_subtitle : site.subtitle}">
+                       brandingSubtitle = ${!#strings.isEmpty(theme.config.branding.site_subtitle) ? theme.config.branding.site_subtitle : site.subtitle},
+                       badgeIcon = ${theme.config.hero.badge_icon}">
     <section class="fzx-hero">
       <div class="fzx-hero-content">
         <div class="fzx-hero-eyebrow" th:if="${!#strings.isEmpty(theme.config.hero.badge_text)}">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
-            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+          <!-- Star icon (default when badge_icon is null/empty/star) -->
+          <th:block th:if="${badgeIcon == null or badgeIcon == '' or badgeIcon == 'star'}">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+              <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
             </svg>
+          </th:block>
+          <!-- Custom emoji/text icon -->
+          <th:block th:if="${badgeIcon == 'custom' and !#strings.isEmpty(theme.config.hero.badge_icon_custom)}">
+            <span class="fzx-hero-eyebrow-icon" th:text="${theme.config.hero.badge_icon_custom}"></span>
+          </th:block>
+          <!-- badge_icon == 'none': no icon rendered -->
           <span th:text="${theme.config.hero.badge_text}">Halo</span>
         </div>
 

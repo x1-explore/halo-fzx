@@ -21,27 +21,29 @@
     <div th:with="cats = ${categoryFinder.listAsTree()}">
 
       <div class="fzx-cats-grid" th:unless="${#lists.isEmpty(cats)}">
-        <a
-          class="fzx-cat-card fzx-reveal"
-          th:each="cat : ${cats}"
-          th:href="${cat.status.permalink}"
-        >
-          <div class="fzx-cat-cover">
-            <img
-              th:if="${!#strings.isEmpty(cat.spec.cover)}"
-              th:src="${cat.spec.cover}"
-              th:alt="${cat.spec.displayName}"
-            />
-            <span th:unless="${!#strings.isEmpty(cat.spec.cover)}">📁</span>
-          </div>
-          <div class="fzx-cat-body">
-            <div class="fzx-cat-name" th:text="${cat.spec.displayName}">分类名</div>
-            <div
-              class="fzx-cat-count"
-              th:text="${(cat.status.postCount ?: 0) + ' 篇文章'}"
-            >0 篇文章</div>
-          </div>
-        </a>
+        <th:block th:each="cat : ${cats}">
+          <a
+            class="fzx-cat-card fzx-reveal"
+            th:if="${(cat.status.postCount ?: 0) gt 0}"
+            th:href="${cat.status.permalink}"
+          >
+            <div class="fzx-cat-cover">
+              <img
+                th:if="${!#strings.isEmpty(cat.spec.cover)}"
+                th:src="${cat.spec.cover}"
+                th:alt="${cat.spec.displayName}"
+              />
+              <span th:unless="${!#strings.isEmpty(cat.spec.cover)}">📁</span>
+            </div>
+            <div class="fzx-cat-body">
+              <div class="fzx-cat-name" th:text="${cat.spec.displayName}">分类名</div>
+              <div
+                class="fzx-cat-count"
+                th:text="${(cat.status.postCount ?: 0) + ' 篇文章'}"
+              >0 篇文章</div>
+            </div>
+          </a>
+        </th:block>
       </div>
 
       <div class="fzx-empty" th:if="${#lists.isEmpty(cats)}">

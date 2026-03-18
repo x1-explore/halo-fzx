@@ -30,6 +30,9 @@
         <div class="fzx-login-alert fzx-login-alert--info" th:if="${param.containsKey('logout') and !param.containsKey('error')}">
           已安全退出登录
         </div>
+        <div class="fzx-login-alert fzx-login-alert--info" th:if="${param.containsKey('registered') and !param.containsKey('error')}">
+          注册成功，请登录
+        </div>
 
         <form class="fzx-login-form" th:action="@{/login}" method="post">
           <input th:if="${_csrf != null}" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />

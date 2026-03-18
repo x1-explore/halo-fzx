@@ -385,6 +385,22 @@
       if (e.target === overlay) close();
     });
 
+    // Submit on Enter; input inside form guarantees correct keyword param
+    if (input) {
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const form = input.closest('form');
+          if (!form) return;
+          if (form.requestSubmit) {
+            form.requestSubmit();
+          } else if (form.checkValidity()) {
+            form.submit();
+          }
+        }
+      });
+    }
+
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') close();
       if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
@@ -586,53 +602,43 @@
   }
 
   /* ============================================================
-     Post Upvote Button
+     Post Card — full-area click navigation
   ============================================================ */
-  function initUpvote() {
-    const btn = document.getElementById('fzx-upvote-btn');
-    const countEl = document.getElementById('fzx-upvote-count');
-    if (!btn || !countEl) return;
+  function initCardNavigation() {
+    document.querySelectorAll('.fzx-post-card[data-href]').forEach((card) => {
+      const href = card.dataset.href;
+      if (!href) return;
 
-    const postName = btn.dataset.postName;
-    if (!postName) return;
-
-    const storageKey = `fzx-upvoted-${postName}`;
-    const hasVoted = () => {
-      try { return localStorage.getItem(storageKey) === '1'; } catch { return false; }
-    };
-    const markVoted = () => {
-      try { localStorage.setItem(storageKey, '1'); } catch {}
-    };
-
-    if (hasVoted()) {
-      btn.classList.add('fzx-reaction-btn--active');
-      btn.title = '已点赞';
-    }
-
-    btn.addEventListener('click', async () => {
-      if (hasVoted()) return;
-
-      btn.disabled = true;
-      btn.classList.add('fzx-reaction-btn--active');
-      try {
-        const res = await fetch(
-          `/apis/api.halo.run/v1alpha1/posts/${encodeURIComponent(postName)}/upvote`,
-          { method: 'POST', headers: { 'Content-Type': 'application/json' } }
-        );
-        if (res.ok) {
-          const current = parseInt(countEl.textContent, 10) || 0;
-          countEl.textContent = current + 1;
-          btn.title = '已点赞';
-          markVoted();
-        } else {
-          btn.classList.remove('fzx-reaction-btn--active');
+      // Mouse click: support modifier keys for open-in-new-tab
+      card.addEventListener('click', (e) => {
+        // Let natural link clicks (category badges, tag links) work normally
+        if (e.target.closest('a')) return;
+        if (e.ctrlKey || e.metaKey || e.shiftKey) {
+          window.open(href, '_blank', 'noopener');
+          return;
         }
-      } catch (err) {
-        console.warn('Upvote failed', err);
-        btn.classList.remove('fzx-reaction-btn--active');
-      } finally {
-        btn.disabled = false;
-      }
+        window.location.assign(href);
+      });
+
+      // Middle-mouse click: open in new tab (auxclick fires reliably for button 1)
+      card.addEventListener('auxclick', (e) => {
+        if (e.button !== 1) return;
+        if (e.target.closest('a')) return;
+        e.preventDefault();
+        window.open(href, '_blank', 'noopener');
+      });
+
+      // Keyboard: activate on Enter or Space when the card itself is focused
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          if (e.ctrlKey || e.metaKey) {
+            window.open(href, '_blank', 'noopener');
+          } else {
+            window.location.assign(href);
+          }
+        }
+      });
     });
   }
 
@@ -653,6 +659,6 @@
     initLightbox();
     initHeroParallax();
     initPaginationSelect();
-    initUpvote();
+    initCardNavigation();
   });
 })();
