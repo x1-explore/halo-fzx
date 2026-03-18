@@ -8,12 +8,13 @@
 
       <!-- ── Logo ── -->
         <a class="fzx-logo" th:href="@{/}">
-          <img
-          th:if="${!#strings.isEmpty(brandingLogo)}"
-          th:src="${brandingLogo}"
-          class="fzx-logo-img"
-          th:alt="${brandingTitle}"
-        />
+          <span class="fzx-logo-avatar" th:if="${!#strings.isEmpty(brandingLogo)}">
+            <img
+              th:src="${brandingLogo}"
+              class="fzx-logo-img"
+              th:alt="${brandingTitle}"
+            />
+          </span>
         <span class="fzx-logo-text" th:text="${brandingTitle}">FZX</span>
       </a>
 

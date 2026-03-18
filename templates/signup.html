@@ -39,6 +39,15 @@
             <input id="signup-username" name="username" type="text" autocomplete="username" required pattern="[a-zA-Z0-9_-]+" title="只允许字母、数字、下划线和连字符" placeholder="输入用户名（字母或数字）" />
           </div>
 
+          <label class="fzx-login-label" for="signup-display-name">显示名称</label>
+          <div class="fzx-login-field">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <input id="signup-display-name" name="displayName" type="text" autocomplete="nickname" required placeholder="输入显示名称" />
+          </div>
+
           <label class="fzx-login-label" for="signup-email">邮箱</label>
           <div class="fzx-login-field">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -57,6 +66,27 @@
             <input id="signup-password" name="password" type="password" autocomplete="new-password" required minlength="6" placeholder="输入密码（至少6位）" />
           </div>
 
+          <label class="fzx-login-label" for="signup-confirm-password">确认密码</label>
+          <div class="fzx-login-field">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <input id="signup-confirm-password" name="confirmPassword" type="password" autocomplete="new-password" required minlength="6" placeholder="再次输入密码" />
+          </div>
+
+          <th:block th:if="${globalInfo != null and globalInfo.mustVerifyEmailOnRegistration}">
+            <label class="fzx-login-label" for="signup-email-code">邮箱验证码</label>
+            <div class="fzx-login-field">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+              <input id="signup-email-code" name="emailCode" type="text" inputmode="numeric" pattern="[0-9]*" required placeholder="输入邮箱验证码" />
+            </div>
+            <button id="signup-email-code-send" class="fzx-btn fzx-btn-ghost" type="button">发送验证码</button>
+          </th:block>
+
           <button class="fzx-btn fzx-btn-primary fzx-login-submit" type="submit">注册</button>
         </form>
 
@@ -66,5 +96,85 @@
         </div>
       </div>
     </div>
+
+    <script th:inline="javascript">
+      document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('.fzx-login-form');
+        const usernameInput = document.getElementById('signup-username');
+        const displayNameInput = document.getElementById('signup-display-name');
+        const passwordInput = document.getElementById('signup-password');
+        const confirmInput = document.getElementById('signup-confirm-password');
+        if (form) {
+          form.addEventListener('submit', function (e) {
+            if (passwordInput && confirmInput && passwordInput.value !== confirmInput.value) {
+              e.preventDefault();
+              confirmInput.setCustomValidity('两次输入的密码不一致');
+              confirmInput.reportValidity();
+              return;
+            }
+            if (confirmInput) confirmInput.setCustomValidity('');
+            if (usernameInput) usernameInput.value = usernameInput.value.trim();
+            if (displayNameInput) displayNameInput.value = displayNameInput.value.trim();
+          });
+        }
+
+        const sendBtn = document.getElementById('signup-email-code-send');
+        const emailInput = document.getElementById('signup-email');
+        if (!sendBtn || !emailInput) return;
+        sendBtn.addEventListener('click', async function () {
+          const email = emailInput.value.trim();
+          if (!email) {
+            emailInput.reportValidity();
+            return;
+          }
+          const csrfHeader = /*[[${_csrf != null ? _csrf.headerName : ''}]]*/ '';
+          const csrfToken = /*[[${_csrf != null ? _csrf.token : ''}]]*/ '';
+          sendBtn.disabled = true;
+          const originalText = sendBtn.textContent;
+          sendBtn.textContent = '发送中...';
+          try {
+            const headers = { 'Content-Type': 'application/json' };
+            if (csrfHeader && csrfToken) headers[csrfHeader] = csrfToken;
+            const response = await fetch('/signup/send-email-code', {
+              method: 'POST',
+              headers,
+              body: JSON.stringify({ email }),
+            });
+            if (!response.ok) {
+              let message = '验证码发送失败，请稍后重试';
+              try {
+                const payload = await response.json();
+                if (payload) {
+                  if (Array.isArray(payload.errors) && payload.errors.length > 0) {
+                    message = payload.errors
+                      .map(function (item) {
+                        return typeof item === 'string' ? item : (item && item.message ? item.message : '');
+                      })
+                      .filter(Boolean)
+                      .join('；') || message;
+                  } else if (typeof payload.errors === 'string' && payload.errors.trim()) {
+                    message = payload.errors.trim();
+                  } else if (typeof payload.message === 'string' && payload.message.trim()) {
+                    message = payload.message.trim();
+                  }
+                }
+              } catch (parseErr) {
+                console.warn('FZX signup email-code response parse failed', parseErr);
+              }
+              throw new Error(message);
+            }
+            sendBtn.textContent = '已发送';
+          } catch (err) {
+            sendBtn.textContent = originalText;
+            window.alert(err.message || '验证码发送失败');
+          } finally {
+            window.setTimeout(function () {
+              sendBtn.disabled = false;
+              sendBtn.textContent = originalText;
+            }, 1200);
+          }
+        });
+      });
+    </script>
   </body>
 </html>

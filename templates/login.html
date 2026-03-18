@@ -30,7 +30,7 @@
         <div class="fzx-login-alert fzx-login-alert--info" th:if="${param.containsKey('logout') and !param.containsKey('error')}">
           已安全退出登录
         </div>
-        <div class="fzx-login-alert fzx-login-alert--info" th:if="${param.containsKey('registered') and !param.containsKey('error')}">
+        <div class="fzx-login-alert fzx-login-alert--info" th:if="${(param.containsKey('signup') or param.containsKey('registered')) and !param.containsKey('error')}">
           注册成功，请登录
         </div>
 
@@ -60,7 +60,7 @@
               <input type="checkbox" name="remember-me" value="true" />
               记住我
             </label>
-            <a class="fzx-login-link" th:href="@{/password-reset}">忘记密码？</a>
+            <a class="fzx-login-link" th:href="@{/password-reset/email}">忘记密码？</a>
           </div>
 
           <button class="fzx-btn fzx-btn-primary fzx-login-submit" type="submit">登录</button>
@@ -73,5 +73,28 @@
         </div>
       </div>
     </div>
+
+    <script th:if="${not #strings.isEmpty(publicKey)}" src="/webjars/jsencrypt/3.5.4/bin/jsencrypt.min.js" defer></script>
+    <script th:if="${not #strings.isEmpty(publicKey)}" th:inline="javascript">
+      document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('.fzx-login-form');
+        const passwordInput = document.getElementById('login-password');
+        const key = /*[[${publicKey}]]*/ '';
+        if (!form || !passwordInput || !key) return;
+        form.addEventListener('submit', function (e) {
+          if (!window.JSEncrypt || !passwordInput.value) return;
+          const encryptor = new JSEncrypt();
+          encryptor.setPublicKey(key);
+          const encrypted = encryptor.encrypt(passwordInput.value);
+          if (!encrypted) {
+            e.preventDefault();
+            console.error('FZX login encryption failed');
+            window.alert('密码加密失败，请刷新页面后重试');
+            return;
+          }
+          passwordInput.value = encrypted;
+        });
+      });
+    </script>
   </body>
 </html>
