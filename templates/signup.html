@@ -27,22 +27,43 @@
           注册失败，请检查输入信息
         </div>
 
-        <form class="fzx-login-form" th:action="@{/register}" method="post">
+        <form class="fzx-login-form" th:action="@{/signup}" method="post">
           <input th:if="${_csrf != null}" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
           <label class="fzx-login-label" for="signup-username">用户名</label>
           <div class="fzx-login-field">
-            <input id="signup-username" name="username" type="text" autocomplete="username" required placeholder="输入用户名" />
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <input id="signup-username" name="username" type="text" autocomplete="username" required pattern="[a-zA-Z0-9_-]+" title="只允许字母、数字、下划线和连字符" placeholder="输入用户名（字母或数字）" />
           </div>
 
           <label class="fzx-login-label" for="signup-email">邮箱</label>
           <div class="fzx-login-field">
-            <input id="signup-email" name="email" type="email" autocomplete="email" required placeholder="输入邮箱" />
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+            <input id="signup-email" name="email" type="email" autocomplete="email" required placeholder="输入邮箱地址" />
+          </div>
+
+          <label class="fzx-login-label" for="signup-displayname">昵称</label>
+          <div class="fzx-login-field">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <input id="signup-displayname" name="displayName" type="text" autocomplete="name" placeholder="输入昵称（可选）" />
           </div>
 
           <label class="fzx-login-label" for="signup-password">密码</label>
           <div class="fzx-login-field">
-            <input id="signup-password" name="password" type="password" autocomplete="new-password" required placeholder="输入密码" />
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <input id="signup-password" name="password" type="password" autocomplete="new-password" required minlength="6" placeholder="输入密码（至少6位）" />
           </div>
 
           <button class="fzx-btn fzx-btn-primary fzx-login-submit" type="submit">注册</button>

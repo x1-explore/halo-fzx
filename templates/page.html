@@ -7,7 +7,7 @@
     content     = ~{::content},
     head        = null,
     footer      = ~{::footer},
-    sidebar     = ${theme.config.page.show_sidebar == true ? ~{::sidebar} : ~{::emptySidebar}},
+    sidebar     = ~{::sidebar},
     contentClass= ${theme.config.page.center_layout != false ? 'fzx-main-grid--single' : null}
   )}"
 >
@@ -21,7 +21,7 @@
   </th:block>
 
   <th:block th:fragment="sidebar">
-    <aside class="fzx-sidebar">
+    <aside class="fzx-sidebar" th:if="${theme.config.page.show_sidebar == true}">
       <div class="fzx-widget fzx-toc-widget">
         <h3 class="fzx-widget-title">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -42,8 +42,6 @@
   <th:block th:fragment="footer">
     <script>/* TOC populated by main.js */</script>
   </th:block>
-
-  <th:block th:fragment="emptySidebar"></th:block>
 
   <th:block th:fragment="content">
     <article class="fzx-post-wrap">

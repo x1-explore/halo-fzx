@@ -74,11 +74,11 @@
 /* Light theme tokens */
 :root[data-theme="light"] {
   color-scheme: light;
-  --space-950: #f3f5fb;
-  --space-900: #f1f4fb;
-  --space-800: #e5e7eb;
-  --space-700: #e2e8f0;
-  --space-600: #cbd5e1;
+  --space-950: #eef1f8;
+  --space-900: #e8ecf4;
+  --space-800: #dde3ef;
+  --space-700: #d0d8e8;
+  --space-600: #b8c5dc;
   --space-500: #c7d2fe;
   --space-400: #94a3b8;
   --space-300: #cbd5e1;
@@ -138,7 +138,11 @@ body {
 }
 
 :root[data-theme="light"] body {
-  background: linear-gradient(180deg, #f1f4fb 0%, #eef2f8 100%);
+  background:
+    radial-gradient(ellipse 80% 50% at 10% 0%, rgba(99, 102, 241, 0.10) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 20%, rgba(167, 139, 250, 0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 60% at 50% 100%, rgba(236, 72, 153, 0.06) 0%, transparent 70%),
+    linear-gradient(180deg, #e8ecf4 0%, #dde3ef 50%, #e2e8f2 100%);
 }
 
 /* === Star Canvas === */
@@ -153,7 +157,7 @@ body {
 }
 
 :root[data-theme="light"] #fzx-starfield {
-  opacity: 0.58;
+  opacity: 0.45;
   mix-blend-mode: multiply;
 }
 
@@ -369,8 +373,15 @@ body {
   display: none;
 }
 
-.fzx-theme-toggle[data-active-mode="dark"] .fzx-theme-icon--moon,
-.fzx-theme-toggle:not([data-active-mode]) .fzx-theme-icon--moon { display: block; }
+/* Show correct icon immediately based on data-theme (set by inline script before JS runs) */
+:root[data-theme="dark"] .fzx-theme-icon--moon,
+:root:not([data-theme]) .fzx-theme-icon--moon { display: block; }
+:root[data-theme="light"] .fzx-theme-icon--sun { display: block; }
+
+/* Keep data-active-mode overrides for JS-managed state (same result, no conflict) */
+.fzx-theme-toggle[data-active-mode="dark"] .fzx-theme-icon--sun,
+.fzx-theme-toggle[data-active-mode="light"] .fzx-theme-icon--moon { display: none; }
+.fzx-theme-toggle[data-active-mode="dark"] .fzx-theme-icon--moon { display: block; }
 .fzx-theme-toggle[data-active-mode="light"] .fzx-theme-icon--sun { display: block; }
 
 .fzx-auth-btn {
@@ -781,6 +792,7 @@ body {
   gap: 1.5rem;
 }
 
+/* Stretched-link pattern: title <a> covers the whole card */
 .fzx-post-card {
   background: var(--glass-bg);
   backdrop-filter: var(--glass-blur);
@@ -792,6 +804,43 @@ body {
   text-decoration: none;
   display: block;
   position: relative;
+  cursor: pointer;
+}
+
+.fzx-stretched-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.fzx-stretched-link::after {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  content: '';
+}
+
+/* Category / tag links must sit above the stretched overlay */
+.fzx-card-cat-link {
+  position: relative;
+  z-index: 2;
+}
+
+/* === Section Header (homepage) === */
+.fzx-section-header {
+  margin-bottom: 1.25rem;
+}
+
+.fzx-section-title {
+  font-family: var(--font-serif);
+  font-size: 1.375rem;
+  font-weight: 600;
+  background: var(--grad-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid rgba(129, 140, 248, 0.25);
 }
 
 .fzx-post-card::before {
@@ -901,6 +950,11 @@ body {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.fzx-card-title a {
+  color: inherit;
+  text-decoration: none;
 }
 
 .fzx-post-card:hover .fzx-card-title { color: var(--primary-light); }
@@ -1568,6 +1622,16 @@ body {
   background: rgba(244, 114, 182, 0.08);
 }
 
+.fzx-reaction-btn--active {
+  border-color: var(--pink);
+  color: var(--pink);
+  background: rgba(244, 114, 182, 0.12);
+}
+
+.fzx-reaction-btn--active:hover {
+  cursor: default;
+}
+
 .fzx-reaction-btn svg { width: 15px; height: 15px; }
 
 /* Comment Section */
@@ -1807,6 +1871,14 @@ body {
               radial-gradient(900px at 80% 10%, rgba(244, 114, 182, 0.08), transparent 55%),
               var(--space-900);
   color: var(--text-primary);
+}
+
+:root[data-theme="light"] .fzx-login-page {
+  background:
+    radial-gradient(ellipse 80% 60% at 10% 0%, rgba(99, 102, 241, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 10%, rgba(236, 72, 153, 0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 70% at 50% 100%, rgba(167, 139, 250, 0.07) 0%, transparent 70%),
+    linear-gradient(180deg, #e8ecf4 0%, #dde3ef 100%);
 }
 
 .fzx-login-shell {
