@@ -199,6 +199,7 @@ body {
 .fzx-main-grid--single .fzx-sidebar { display: none; }
 
 .fzx-main-grid--single .fzx-content-col {
+  /* wider centred reading area for single pages (e.g. About) */
   max-width: 960px;
   margin: 0 auto;
   width: 100%;
@@ -278,23 +279,18 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: calc(1.5rem + 3px);
-  height: calc(1.5rem + 3px);
-  padding: 1.5px;
+  width: 1.875rem;
+  height: 1.875rem;
   border-radius: 50%;
   overflow: hidden;
-  background: var(--grad-primary);
   flex-shrink: 0;
 }
 
 .fzx-logo-text {
   font-family: var(--font-serif);
-  font-size: 1.375rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  background: var(--grad-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--text-primary);
   letter-spacing: -0.02em;
 }
 
@@ -1165,8 +1161,8 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.2rem;
-  height: 1.2rem;
+  width: 1.5rem;
+  height: 1.5rem;
   border-radius: 50%;
   background: rgba(129, 140, 248, 0.1);
   border: 1px solid rgba(129, 140, 248, 0.2);
@@ -1176,7 +1172,7 @@ body {
   flex-shrink: 0;
 }
 
-.fzx-social-link svg { width: 10px; height: 10px; display: block; }
+.fzx-social-link svg { width: 13px; height: 13px; display: block; }
 
 .fzx-social-link:hover {
   background: var(--primary-glow);
