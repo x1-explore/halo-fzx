@@ -2,15 +2,19 @@
         th:with="menu = ${menuFinder.getPrimary()},
                  brandingTitle = ${!#strings.isEmpty(theme.config.branding.site_title) ? theme.config.branding.site_title : site.title},
                  brandingSubtitle = ${!#strings.isEmpty(theme.config.branding.site_subtitle) ? theme.config.branding.site_subtitle : site.subtitle},
-                 brandingLogo = ${!#strings.isEmpty(theme.config.branding.logo_url) ? theme.config.branding.logo_url : site.logo}">
+                 brandingAvatar = ${
+                   !#strings.isEmpty(theme.config.branding.avatar_url) ? theme.config.branding.avatar_url :
+                   !#strings.isEmpty(theme.config.branding.logo_url) ? theme.config.branding.logo_url :
+                   site.logo
+                 }">
   <div class="fzx-container" style="width:100%">
     <div class="fzx-header-inner">
 
       <!-- ── Logo ── -->
         <a class="fzx-logo" th:href="@{/}">
-          <span class="fzx-logo-avatar" th:if="${!#strings.isEmpty(brandingLogo)}">
+          <span class="fzx-logo-avatar" th:if="${!#strings.isEmpty(brandingAvatar)}">
             <img
-              th:src="${brandingLogo}"
+              th:src="${brandingAvatar}"
               class="fzx-logo-img"
               th:alt="${brandingTitle}"
             />
