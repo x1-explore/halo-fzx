@@ -24,7 +24,7 @@
       <option
         th:each="i : ${#numbers.sequence(1, totalPages)}"
         th:selected="${i == page}"
-        th:value="|${context}page/${i}|"
+        th:value="${i == 1 ? context : context + 'page/' + i}"
         th:text="|${i} / ${totalPages}|"
         style="background:var(--space-800);color:var(--text-primary)"
       ></option>

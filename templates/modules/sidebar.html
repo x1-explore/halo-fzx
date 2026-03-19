@@ -1,6 +1,6 @@
 <aside class="fzx-sidebar" th:fragment="sidebar" xmlns:th="https://www.thymeleaf.org"
-       th:with="brandingTitle = ${!#strings.isEmpty(theme.config.branding.site_title) ? theme.config.branding.site_title : site.title},
-                brandingSubtitle = ${!#strings.isEmpty(theme.config.branding.site_subtitle) ? theme.config.branding.site_subtitle : site.subtitle},
+       th:with="brandingTitle = ${!#strings.isEmpty(theme.config.contact.profile_title) ? theme.config.contact.profile_title : (!#strings.isEmpty(theme.config.branding.site_title) ? theme.config.branding.site_title : site.title)},
+                brandingSubtitle = ${!#strings.isEmpty(theme.config.contact.profile_subtitle) ? theme.config.contact.profile_subtitle : (!#strings.isEmpty(theme.config.branding.site_subtitle) ? theme.config.branding.site_subtitle : site.subtitle)},
                 brandingAvatar = ${
                   !#strings.isEmpty(theme.config.branding.avatar_url) ? theme.config.branding.avatar_url :
                   !#strings.isEmpty(theme.config.branding.logo_url) ? theme.config.branding.logo_url :
