@@ -209,6 +209,16 @@ spec:
     - group: contact
       label: 社交与联系方式
       formSchema:
+        - $formkit: text
+          name: profile_title
+          label: 侧边栏个人卡片标题（留空则使用站点名称）
+          value: ""
+          help: 覆盖侧边栏资料卡片上显示的名字/标题
+        - $formkit: text
+          name: profile_subtitle
+          label: 侧边栏个人卡片副标题（留空则使用站点副标题）
+          value: ""
+          help: 覆盖侧边栏资料卡片上显示的副标题/描述文字
         - $formkit: repeater
           name: social_links
           label: 社交/联系方式链接（显示为个人资料卡片中的图标）
