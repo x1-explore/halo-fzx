@@ -109,8 +109,9 @@
             />
           </div>
         </form>
+        <div id="fzx-search-results" class="fzx-search-results"></div>
         <p class="fzx-search-hint">
-          按 <span class="fzx-kbd">Enter</span> 搜索 ·
+          按 <span class="fzx-kbd">Enter</span> 全文搜索 ·
           <span class="fzx-kbd">Esc</span> 关闭 ·
           <span class="fzx-kbd">Ctrl+K</span> 快速打开
         </p>
@@ -119,5 +120,15 @@
 
     <!-- Image Lightbox (populated by JS) -->
     <div id="fzx-lightbox" class="fzx-lightbox"></div>
+
+    <!-- Search index for live search -->
+    <script th:inline="javascript">
+    /*<![CDATA[*/
+    window.__fzxPosts = [];
+    /*[# th:each="p : ${postFinder.list(1, 100).items}"]*/
+    window.__fzxPosts.push({t: /*[[${p.spec.title}]]*/ '', u: /*[[${p.status.permalink}]]*/ ''});
+    /*[/]*/
+    /*]]>*/
+    </script>
   </body>
 </html>
