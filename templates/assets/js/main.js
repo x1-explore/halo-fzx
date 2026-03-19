@@ -365,6 +365,7 @@
     const btn = document.getElementById('fzx-search-btn');
     const overlay = document.getElementById('fzx-search-overlay');
     const input = document.getElementById('fzx-search-input');
+    const resultsBox = document.getElementById('fzx-search-results');
 
     if (!btn || !overlay) return;
 
@@ -377,6 +378,8 @@
     const close = () => {
       overlay.classList.remove('open');
       document.body.style.overflow = '';
+      if (resultsBox) resultsBox.innerHTML = '';
+      if (input) input.value = '';
     };
 
     btn.addEventListener('click', open);
@@ -385,10 +388,44 @@
       if (e.target === overlay) close();
     });
 
-    // Submit on Enter; input inside form guarantees correct keyword param
-    if (input) {
+    // Live search as user types
+    if (input && resultsBox) {
+      let searchTimer;
+      input.addEventListener('input', () => {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(() => {
+          const q = input.value.trim().toLowerCase();
+          if (!q) { resultsBox.innerHTML = ''; return; }
+
+          const posts = window.__fzxPosts || [];
+          const re = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+          const matches = posts.filter((p) => p.t && p.t.toLowerCase().includes(q)).slice(0, 8);
+
+          if (!matches.length) {
+            resultsBox.innerHTML = '<p class="fzx-search-empty">未找到相关文章</p>';
+          } else {
+            resultsBox.innerHTML = matches
+              .map((p) => {
+                const safe = p.t
+                  .replace(/&/g, '&amp;')
+                  .replace(/</g, '&lt;')
+                  .replace(/>/g, '&gt;');
+                const hl = safe.replace(re, (m) => `<mark>${m}</mark>`);
+                const safeUrl = p.u.replace(/"/g, '%22').replace(/'/g, '%27');
+                return `<a class="fzx-search-result-item" href="${safeUrl}">${hl}</a>`;
+              })
+              .join('');
+          }
+        }, 180);
+      });
+
+      // Arrow key navigation from input into results
       input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          const first = resultsBox.querySelector('.fzx-search-result-item');
+          if (first) first.focus();
+        } else if (e.key === 'Enter') {
           e.preventDefault();
           const form = input.closest('form');
           if (!form) return;
@@ -397,6 +434,20 @@
           } else if (form.checkValidity()) {
             form.submit();
           }
+        }
+      });
+
+      // Arrow key navigation within results
+      resultsBox.addEventListener('keydown', (e) => {
+        const items = [...resultsBox.querySelectorAll('.fzx-search-result-item')];
+        const idx = items.indexOf(document.activeElement);
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          if (idx < items.length - 1) items[idx + 1].focus();
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          if (idx > 0) items[idx - 1].focus();
+          else input.focus();
         }
       });
     }
@@ -409,6 +460,7 @@
       }
     });
   }
+
 
   /* ============================================================
      Back to Top
@@ -591,13 +643,71 @@
   }
 
   /* ============================================================
-     Smooth Pagination Select
+     AJAX Pagination (homepage post list)
   ============================================================ */
-  function initPaginationSelect() {
-    const sel = document.getElementById('fzx-page-select');
-    if (!sel) return;
-    sel.addEventListener('change', () => {
-      if (sel.value) window.location.href = sel.value;
+  function initAjaxPagination() {
+    function getContainer() {
+      return document.getElementById('fzx-post-list');
+    }
+
+    function bindPagination() {
+      const container = getContainer();
+      if (!container) return;
+
+      container.querySelectorAll('.fzx-page-btn:not(.fzx-page-disabled)').forEach((a) => {
+        a.addEventListener('click', (e) => {
+          e.preventDefault();
+          loadPage(a.href);
+        });
+      });
+
+      const sel = container.querySelector('#fzx-page-select');
+      if (sel) {
+        sel.addEventListener('change', () => {
+          if (sel.value) loadPage(sel.value);
+        });
+      }
+    }
+
+    function loadPage(url) {
+      const container = getContainer();
+      if (!container) { window.location.href = url; return; }
+
+      container.style.opacity = '0.5';
+      container.style.pointerEvents = 'none';
+
+      fetch(url)
+        .then((r) => r.text())
+        .then((html) => {
+          const doc = new DOMParser().parseFromString(html, 'text/html');
+          const next = doc.getElementById('fzx-post-list');
+          if (!next) { window.location.href = url; return; }
+
+          container.innerHTML = next.innerHTML;
+          container.style.opacity = '1';
+          container.style.pointerEvents = '';
+
+          history.pushState({ fzxAjax: true, url: url }, '', url);
+          initCardNavigation();
+          bindPagination();
+
+          // Smooth scroll to the post list
+          container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        })
+        .catch(() => {
+          container.style.opacity = '1';
+          container.style.pointerEvents = '';
+          window.location.href = url;
+        });
+    }
+
+    bindPagination();
+
+    // Restore AJAX-loaded page when navigating back/forward
+    window.addEventListener('popstate', (e) => {
+      if (getContainer() && e.state && e.state.fzxAjax) {
+        loadPage(e.state.url || window.location.href);
+      }
     });
   }
 
@@ -658,7 +768,7 @@
     initScrollReveal();
     initLightbox();
     initHeroParallax();
-    initPaginationSelect();
+    initAjaxPagination();
     initCardNavigation();
   });
 })();
