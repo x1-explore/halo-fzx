@@ -13,13 +13,16 @@
 >
 
   <!-- ── Cover Hero ── -->
-  <th:block th:fragment="hero">
+  <th:block th:fragment="hero"
+            th:with="coverUrl = ${!#strings.isEmpty(post.spec.cover) ? post.spec.cover : null},
+                     lowerCover = ${coverUrl != null ? #strings.toLowerCase(coverUrl) : ''},
+                     safeCover = ${coverUrl != null and (lowerCover.startsWith('http://') or lowerCover.startsWith('https://') or lowerCover.startsWith('/')) ? coverUrl : null}">
     <div
-      th:if="${!#strings.isEmpty(post.spec.cover)}"
+      th:if="${safeCover != null}"
       class="fzx-post-hero"
-      th:style="|background-image: url('${post.spec.cover}')|"
+      th:style="|background-image: url('${safeCover}')|"
     ></div>
-    <div class="fzx-header-spacer" th:unless="${!#strings.isEmpty(post.spec.cover)}"></div>
+    <div class="fzx-header-spacer" th:unless="${safeCover != null}"></div>
   </th:block>
 
   <!-- ── TOC Sidebar ── -->

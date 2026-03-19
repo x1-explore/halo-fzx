@@ -10,6 +10,17 @@
   const COLOR_SOURCE_KEY = 'fzx-color-scheme-source';
 
   /* ============================================================
+     URL Safety Helper — reject javascript:/data:/vbscript: schemes
+  ============================================================ */
+  function isSafeUrl(url) {
+    if (!url) return false;
+    const trimmed = url.trim().replace(/\s/g, '');
+    const lower = trimmed.toLowerCase();
+    // Allow only relative paths and http(s) absolute URLs
+    return lower.startsWith('/') || lower.startsWith('http://') || lower.startsWith('https://');
+  }
+
+  /* ============================================================
      Color Scheme Toggle (Light / Dark)
    ============================================================ */
   function initColorScheme() {
@@ -411,9 +422,11 @@
                   .replace(/</g, '&lt;')
                   .replace(/>/g, '&gt;');
                 const hl = safe.replace(re, (m) => `<mark>${m}</mark>`);
-                const safeUrl = p.u.replace(/"/g, '%22').replace(/'/g, '%27');
-                return `<a class="fzx-search-result-item" href="${safeUrl}">${hl}</a>`;
+                if (!isSafeUrl(p.u)) return null;
+                const encodedUrl = p.u.replace(/"/g, '%22').replace(/'/g, '%27');
+                return `<a class="fzx-search-result-item" href="${encodedUrl}">${hl}</a>`;
               })
+              .filter(Boolean)
               .join('');
           }
         }, 180);
@@ -648,7 +661,7 @@
   function initCardNavigation() {
     document.querySelectorAll('.fzx-post-card[data-href]').forEach((card) => {
       const href = card.dataset.href;
-      if (!href) return;
+      if (!href || !isSafeUrl(href)) return;
 
       // Mouse click: support modifier keys for open-in-new-tab
       card.addEventListener('click', (e) => {
