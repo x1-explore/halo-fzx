@@ -1,67 +1,15 @@
 <!doctype html>
-<html xmlns:th="https://www.thymeleaf.org">
-  <head>
-    <th:block th:replace="~{modules/base-head :: base-head(
-      title = ${'重置密码 - ' + (!#strings.isEmpty(theme.config.branding.site_title) ? theme.config.branding.site_title : site.title)}
-    )}" />
-  </head>
-  <body class="fzx-login-page">
-    <canvas id="fzx-starfield" aria-hidden="true"></canvas>
-
-    <div class="fzx-login-shell"
-         th:with="brandingTitle = ${!#strings.isEmpty(theme.config.branding.site_title) ? theme.config.branding.site_title : site.title},
-                  brandingSubtitle = ${!#strings.isEmpty(theme.config.branding.site_subtitle) ? theme.config.branding.site_subtitle : site.subtitle},
-                  brandingLogo = ${!#strings.isEmpty(theme.config.branding.logo_url) ? theme.config.branding.logo_url : site.logo}">
-      <div class="fzx-login-card fzx-reveal">
-        <div class="fzx-login-brand">
-          <div class="fzx-login-avatar" th:if="${!#strings.isEmpty(brandingLogo)}">
-            <img th:src="${brandingLogo}" th:alt="${brandingTitle}" loading="lazy" />
-          </div>
-          <div class="fzx-login-title" th:text="${brandingTitle}">FZX 方舟星系</div>
-          <p class="fzx-login-subtitle">设置新密码</p>
+<html
+    xmlns:th="https://www.thymeleaf.org"
+    th:replace="~{gateway_fragments/layout:: layout(title = |重置密码 - ${site.title}|, head = null, body = ~{::body})}"
+>
+    <th:block th:fragment="body">
+        <div class="gateway-wrapper">
+            <div class="halo-form-wrapper">
+                <h1 class="form-title">重置密码</h1>
+                <form th:replace="~{gateway_fragments/password_reset_email_reset::form}"></form>
+            </div>
+            <div th:replace="~{gateway_fragments/common::languageSwitcher}"></div>
         </div>
-
-        <div class="fzx-login-alert fzx-login-alert--error"
-             th:if="${param.error != null and !#lists.isEmpty(param.error)}">
-          重置密码失败，链接可能已失效，请重新申请
-        </div>
-
-        <form class="fzx-login-form" th:action="@{/password-reset/email/reset}" method="post"
-              th:with="resetToken = ${token != null ? token : (param.token != null and !#lists.isEmpty(param.token) ? param.token[0] : '')}">
-          <input th:if="${_csrf != null}" type="hidden"
-                 th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-          <input type="hidden" name="token" th:value="${resetToken}" />
-
-          <label class="fzx-login-label" for="reset-password">新密码</label>
-          <div class="fzx-login-field">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-            </svg>
-            <input id="reset-password" name="password" type="password"
-                   autocomplete="new-password" required minlength="6"
-                   placeholder="输入新密码（至少6位）" />
-          </div>
-
-          <label class="fzx-login-label" for="reset-confirm-password">确认新密码</label>
-          <div class="fzx-login-field">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-            </svg>
-            <input id="reset-confirm-password" name="confirmPassword" type="password"
-                   autocomplete="new-password" required minlength="6"
-                   placeholder="再次输入新密码" />
-          </div>
-
-          <button class="fzx-btn fzx-btn-primary fzx-login-submit" type="submit">确认重置密码</button>
-        </form>
-
-        <div class="fzx-login-actions">
-          <a class="fzx-login-link" th:href="@{/password-reset/email/send}">← 重新发送邮件</a>
-          <a class="fzx-login-link" th:href="@{/login}">← 返回登录</a>
-        </div>
-      </div>
-    </div>
-  </body>
+    </th:block>
 </html>

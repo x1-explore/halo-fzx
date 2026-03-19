@@ -643,75 +643,6 @@
   }
 
   /* ============================================================
-     AJAX Pagination (homepage post list)
-  ============================================================ */
-  function initAjaxPagination() {
-    function getContainer() {
-      return document.getElementById('fzx-post-list');
-    }
-
-    function bindPagination() {
-      const container = getContainer();
-      if (!container) return;
-
-      container.querySelectorAll('.fzx-page-btn:not(.fzx-page-disabled)').forEach((a) => {
-        a.addEventListener('click', (e) => {
-          e.preventDefault();
-          loadPage(a.href);
-        });
-      });
-
-      const sel = container.querySelector('#fzx-page-select');
-      if (sel) {
-        sel.addEventListener('change', () => {
-          if (sel.value) loadPage(sel.value);
-        });
-      }
-    }
-
-    function loadPage(url) {
-      const container = getContainer();
-      if (!container) { window.location.href = url; return; }
-
-      container.style.opacity = '0.5';
-      container.style.pointerEvents = 'none';
-
-      fetch(url)
-        .then((r) => r.text())
-        .then((html) => {
-          const doc = new DOMParser().parseFromString(html, 'text/html');
-          const next = doc.getElementById('fzx-post-list');
-          if (!next) { window.location.href = url; return; }
-
-          container.innerHTML = next.innerHTML;
-          container.style.opacity = '1';
-          container.style.pointerEvents = '';
-
-          history.pushState({ fzxAjax: true, url: url }, '', url);
-          initCardNavigation();
-          bindPagination();
-
-          // Smooth scroll to the post list
-          container.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        })
-        .catch(() => {
-          container.style.opacity = '1';
-          container.style.pointerEvents = '';
-          window.location.href = url;
-        });
-    }
-
-    bindPagination();
-
-    // Restore AJAX-loaded page when navigating back/forward
-    window.addEventListener('popstate', (e) => {
-      if (getContainer() && e.state && e.state.fzxAjax) {
-        loadPage(e.state.url || window.location.href);
-      }
-    });
-  }
-
-  /* ============================================================
      Post Card — full-area click navigation
   ============================================================ */
   function initCardNavigation() {
@@ -768,7 +699,6 @@
     initScrollReveal();
     initLightbox();
     initHeroParallax();
-    initAjaxPagination();
     initCardNavigation();
   });
 })();
