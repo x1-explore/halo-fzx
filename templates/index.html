@@ -17,6 +17,8 @@
             th:with="brandingTitle = ${!#strings.isEmpty(theme.config.branding.site_title) ? theme.config.branding.site_title : site.title},
                        brandingSubtitle = ${!#strings.isEmpty(theme.config.branding.site_subtitle) ? theme.config.branding.site_subtitle : site.subtitle},
                        badgeIcon = ${theme.config.hero.badge_icon}">
+    <!-- Spacer for pages 2+ so fixed header doesn't overlap content -->
+    <div class="fzx-header-spacer" th:unless="${posts == null or posts.page == null or posts.page == 1}"></div>
     <section class="fzx-hero" th:if="${posts == null or posts.page == null or posts.page == 1}">
       <div class="fzx-hero-content">
         <div class="fzx-hero-eyebrow" th:if="${!#strings.isEmpty(theme.config.hero.badge_text)}">
