@@ -27,15 +27,21 @@
           重置密码邮件已发送，请检查您的邮箱
         </div>
 
-        <!-- Error only when explicitly redirected with ?error -->
+        <!-- Invalid reset token redirect -->
         <div class="fzx-login-alert fzx-login-alert--error"
-             th:if="${param.error != null and !#lists.isEmpty(param.error)}">
-          发送失败，请稍后重试
+             th:if="${param.error != null and !#lists.isEmpty(param.error) and param.error[0] == 'invalid_reset_token'}">
+          重置链接已失效，请重新申请
+        </div>
+
+        <!-- Rate limit or other error from model attribute -->
+        <div class="fzx-login-alert fzx-login-alert--error"
+             th:if="${error != null and error == 'rate_limit_exceeded'}">
+          操作过于频繁，请稍后重试
         </div>
 
         <form th:unless="${sent != null and sent}"
               class="fzx-login-form"
-              th:action="@{/password-reset/email/send}"
+              th:action="@{/password-reset/email}"
               method="post">
           <input th:if="${_csrf != null}" type="hidden"
                  th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
