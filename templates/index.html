@@ -71,9 +71,6 @@
       <h2 class="fzx-section-title" th:text="${theme.config.homepage.section_title}">最新文章</h2>
     </div>
 
-    <!-- AJAX-replaceable post list region -->
-    <div id="fzx-post-list">
-
     <!-- Post grid -->
     <div class="fzx-post-grid" th:if="${posts.total gt 0}">
       <th:block th:each="post : ${posts.items}">
@@ -100,8 +97,6 @@
         hasNext     = ${posts.hasNext()}
       )}"
     />
-
-    </div><!-- /#fzx-post-list -->
 
   </th:block>
 </html>

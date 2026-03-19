@@ -1,59 +1,16 @@
 <!doctype html>
-<html xmlns:th="https://www.thymeleaf.org">
-  <head>
-    <th:block th:replace="~{modules/base-head :: base-head(
-      title = ${'找回密码 - ' + (!#strings.isEmpty(theme.config.branding.site_title) ? theme.config.branding.site_title : site.title)}
-    )}" />
-  </head>
-  <body class="fzx-login-page">
-    <canvas id="fzx-starfield" aria-hidden="true"></canvas>
-
-    <div class="fzx-login-shell"
-         th:with="brandingTitle = ${!#strings.isEmpty(theme.config.branding.site_title) ? theme.config.branding.site_title : site.title},
-                  brandingSubtitle = ${!#strings.isEmpty(theme.config.branding.site_subtitle) ? theme.config.branding.site_subtitle : site.subtitle},
-                  brandingLogo = ${!#strings.isEmpty(theme.config.branding.logo_url) ? theme.config.branding.logo_url : site.logo}">
-      <div class="fzx-login-card fzx-reveal">
-        <div class="fzx-login-brand">
-          <div class="fzx-login-avatar" th:if="${!#strings.isEmpty(brandingLogo)}">
-            <img th:src="${brandingLogo}" th:alt="${brandingTitle}" loading="lazy" />
-          </div>
-          <div class="fzx-login-title" th:text="${brandingTitle}">FZX 方舟星系</div>
-          <p class="fzx-login-subtitle">找回您的账号密码</p>
+<html
+    xmlns:th="https://www.thymeleaf.org"
+    th:replace="~{gateway_fragments/layout:: layout(title = |找回密码 - ${site.title}|, head = null, body = ~{::body})}"
+>
+    <th:block th:fragment="body">
+        <div class="gateway-wrapper">
+            <div class="halo-form-wrapper">
+                <h1 class="form-title" th:text="${sent} ? '邮件已发送' : '找回密码'"></h1>
+                <form th:replace="~{gateway_fragments/password_reset_email_send::form}"></form>
+                <div th:replace="~{gateway_fragments/common::passwordResetMethods}"></div>
+            </div>
+            <div th:replace="~{gateway_fragments/common::languageSwitcher}"></div>
         </div>
-
-        <div class="fzx-login-alert fzx-login-alert--error"
-             th:if="${param.error != null and !#lists.isEmpty(param.error)}">
-          找回密码失败，请检查邮箱地址或稍后重试
-        </div>
-
-        <div class="fzx-login-alert fzx-login-alert--info"
-             th:if="${param.sent != null and !#lists.isEmpty(param.sent)}">
-          重置邮件已发送，请检查您的邮箱（包括垃圾邮件）
-        </div>
-
-        <form class="fzx-login-form" th:action="@{/password-reset/email/send}" method="post"
-              th:if="${param.sent == null or #lists.isEmpty(param.sent)}">
-          <input th:if="${_csrf != null}" type="hidden"
-                 th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-
-          <label class="fzx-login-label" for="reset-username">电子邮箱</label>
-          <div class="fzx-login-field">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-              <polyline points="22,6 12,13 2,6"></polyline>
-            </svg>
-            <input id="reset-username" name="username" type="email"
-                   autocomplete="email" required placeholder="输入注册邮箱" />
-          </div>
-
-          <button class="fzx-btn fzx-btn-primary fzx-login-submit" type="submit">发送重置邮件</button>
-        </form>
-
-        <div class="fzx-login-actions">
-          <a class="fzx-login-link" th:href="@{/login}">← 返回登录</a>
-          <a class="fzx-login-link" th:href="@{/}">← 返回首页</a>
-        </div>
-      </div>
-    </div>
-  </body>
+    </th:block>
 </html>
